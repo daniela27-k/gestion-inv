@@ -1,78 +1,21 @@
+<!-- layouts/default.vue -->
 <template>
-  <div class="min-h-screen flex bg-gray-50">
-    <!-- Sidebar -->
-    <aside
-      :class="[
-        'fixed z-30 inset-y-0 left-0 w-64 transform bg-white shadow-lg transition-transform duration-200 ease-in-out',
-        sidebarOpen ? 'translate-x-0' : '-translate-x-full',
-        'md:translate-x-0 md:static md:inset-auto',
-      ]"
-      aria-label="Sidebar"
-    >
-      <div class="h-16 flex items-center px-4 border-b">
-        <slot name="logo">
-          <h1 class="text-xl font-bold">Mi Panel</h1>
-        </slot>
+  <div class="flex h-screen bg-gray-100">
+    <aside class="w-64 bg-white shadow-lg flex flex-col">
+      <div class="p-6 text-xl font-bold border-b text-center text-blue-700">
+        PANEL DE ADMINISTRACIÓN
       </div>
-      <nav class="p-4 space-y-1">
-        <!-- Ejemplo de items -->
-        <NuxtLink to="/" class="block px-3 py-2 rounded hover:bg-gray-100">Dashboard</NuxtLink>
-        <NuxtLink to="/inventario" class="block px-3 py-2 rounded hover:bg-gray-100">Inventario</NuxtLink>
-        <NuxtLink to="/proveedores" class="block px-3 py-2 rounded hover:bg-gray-100">Proveedores</NuxtLink>
-        <slot name="sidebar" />
+      <nav class="p-4 space-y-2 flex-1">
+        <NuxtLink to="/usuario" class="block p-2 rounded hover:bg-blue-100">👤 Usuario</NuxtLink>
+        <NuxtLink to="/asignacion" class="block p-2 rounded hover:bg-blue-100">📌 Asignación de Elemento</NuxtLink>
+        <NuxtLink to="/elemento" class="block p-2 rounded hover:bg-blue-100">📦 Elemento</NuxtLink>
+        <NuxtLink to="/ambiente" class="block p-2 rounded hover:bg-blue-100">🏢 Ambiente</NuxtLink>
+        <NuxtLink to="/tipo-elemento" class="block p-2 rounded hover:bg-blue-100">📝 Tipo de Elemento</NuxtLink>
+        <NuxtLink to="/estado-elemento" class="block p-2 rounded hover:bg-blue-100">⚙️ Estado de Elemento</NuxtLink>
       </nav>
     </aside>
-
-    <!-- Overlay móvil -->
-    <div
-      v-if="sidebarOpen"
-      class="fixed inset-0 bg-black/30 z-20 md:hidden"
-      @click="sidebarOpen = false"
-    />
-
-    <!-- Contenido -->
-    <div class="flex-1 flex flex-col min-w-0 md:ml-64">
-      <!-- Header -->
-      <header class="h-16 bg-white border-b flex items-center justify-between px-4">
-        <div class="flex items-center gap-2">
-          <button
-            class="md:hidden p-2 rounded hover:bg-gray-100"
-            @click="sidebarOpen = !sidebarOpen"
-            aria-label="Toggle sidebar"
-          >
-            <span class="block w-5 h-0.5 bg-gray-800 mb-1"></span>
-            <span class="block w-5 h-0.5 bg-gray-800 mb-1"></span>
-            <span class="block w-5 h-0.5 bg-gray-800"></span>
-          </button>
-          <slot name="title">
-            <h2 class="text-lg font-semibold">Inicio</h2>
-          </slot>
-        </div>
-        <div class="flex items-center gap-2">
-          <slot name="actions">
-            <button class="px-3 py-1.5 rounded border hover:bg-gray-50">Acción</button>
-          </slot>
-        </div>
-      </header>
-
-      <!-- Main -->
-      <main class="p-4">
-        <slot>
-          <NuxtPage />
-        </slot>
-      </main>
-
-      <!-- Footer -->
-      <footer class="mt-auto p-4 text-xs text-gray-500">
-        <slot name="footer">© {{ year }} — Tu Empresa</slot>
-      </footer>
-    </div>
+    <main class="flex-1 p-8 overflow-y-auto">
+      <slot />
+    </main>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, computed } from 'vue'
-
-const sidebarOpen = ref(false)
-const year = computed(() => new Date().getFullYear())
-</script>
