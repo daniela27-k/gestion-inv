@@ -1,13 +1,24 @@
-export default {
+// tailwind.config.js
+module.exports = {
   content: [
-    './components/**/*.{vue,js,ts}',
-    './layouts/**/*.vue',
-    './pages/**/*.vue',
-    './plugins/**/*.{js,ts}',
-    './app.vue'
+    "./components/**/*.{vue,js}",
+    "./layouts/**/*.vue",
+    "./pages/**/*.vue",
+    "./plugins/**/*.{js,ts}",
+    "./app.vue",
   ],
   theme: {
-    extend: {}
+    extend: {
+      colors: {
+        "primary-verde": "#A3D9A5", // Verde pastel suave
+        "primary-marron": "#C8A27A", // Marrón claro tipo beige
+        "primary-blanco": "#FFFFFF", // Blanco puro
+        "secondary-celeste": "#A7D8F5", // Celeste pastel
+        "secondary-amarillo": "#F9E4A3", // Amarillo pastel suave
+        "terciario-gris": "#D9D9D9", // Gris claro pastel
+        "terciario-blanco": "#FAFAF7", // Blanco cálido
+      },
+    },
   },
-  plugins: []
-}
+  plugins: [],
+};

@@ -1,36 +1,46 @@
 // nuxt.config.ts
-import vuetify from 'vite-plugin-vuetify'
+import { defineNuxtConfig } from 'nuxt/config'
+import Components from 'unplugin-vue-components/vite'
+import Icons from 'unplugin-icons/vite'
+import IconsResolver from 'unplugin-icons/resolver'
+
 
 export default defineNuxtConfig({
-  css: [
-    'vuetify/styles'
-  ],
-  build: {
-    transpile: ['vuetify']
-  },
-  vite: {
+  
+
+   vite: {
     plugins: [
-      vuetify({ autoImport: true })
-    ]
+      Components({
+        resolvers: [
+          IconsResolver({
+            prefix: 'i', // <i-heroicons-cow /> por ejemplo
+          }),
+        ],
+      }),
+      Icons({
+        autoInstall: true, // instala packs automáticamente
+      }),
+    ],
   },
-  app: {
-    head: {
-      title: 'Mi App Vuetify',
-      meta: [
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' }
-      ],
-      link: [
-        // Google Fonts Roboto
-        {
-          rel: 'stylesheet',
-          href: 'https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&display=swap'
-        },
-        // Material Design Icons
-        {
-          rel: 'stylesheet',
-          href: 'https://cdn.jsdelivr.net/npm/@mdi/font@7.x/css/materialdesignicons.min.css'
-        }
-      ]
+
+  css: ['@/assets/css/main.css'],
+
+  postcss: {
+    plugins: {
+      'postcss-nested': {},
+    },
+  },
+
+  modules: ['@nuxtjs/tailwindcss'],
+
+  compatibilityDate: '2025-07-15',
+  devtools: { enabled: true },
+
+  // RuntimeConfig para exponer variables de entorno
+  runtimeConfig: {
+    public: {
+      // Esta variable leerá NUXT_PUBLIC_API_BASE_URL del .env
+      apiBaseUrl: ''
     }
   }
 })
