@@ -18,6 +18,9 @@ module.exports = {
         "terciario-gris": "#D9D9D9", // Gris claro pastel
         "terciario-blanco": "#FAFAF7", // Blanco cálido
       },
+      backgroundImage:{
+        'gestion':"url('/assets/img/gestion.jpeg')"
+      }
     },
   },
   plugins: [],
