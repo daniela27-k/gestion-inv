@@ -1,4 +1,4 @@
- <template>
+<template>
   <div class="min-h-screen bg-gray-50">
     <!-- Navbar -->
     <nav class="bg-white border-b border-gray-200 fixed w-full z-30 top-0">
@@ -90,7 +90,7 @@
         <!-- Profile -->
         <div class="mb-6 p-4 bg-gray-50 rounded-lg">
           <div class="flex items-center">
-            <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+            <div class="w-12 h-12 bg-pink-600 rounded-full flex items-center justify-center">
               <Icon icon="mdi:account" class="w-6 h-6 text-white" />
             </div>
             <div class="ml-3">

@@ -67,7 +67,7 @@
       <!-- Link a login -->
       <p class="text-center text-gray-600 text-sm">
         ¿Ya tienes cuenta?
-        <NuxtLink to="/login" class="text-blue-500 hover:underline">
+        <NuxtLink to="/login" class="text-green-500 hover:underline">
           Inicia sesión
         </NuxtLink>
       </p>
@@ -116,7 +116,7 @@ async function registro() {
     });
 
     // ✅ El backend ya hace login automático, redirigir al dashboard
-    await router.push('/prueba');
+    await router.push('/perfil');
     
   } catch (err) {
     console.error('Error durante el registro:', err);

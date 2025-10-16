@@ -19,7 +19,7 @@ module.exports = {
         "terciario-blanco": "#FAFAF7", // Blanco cálido
       },
       backgroundImage:{
-        'gestion':"url('/assets/img/gestion.jpeg')"
+        'gestion':"url('/assets/img/foto.jpg')"
       }
     },
   },

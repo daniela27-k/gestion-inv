@@ -1,6 +1,6 @@
 <template>
   <div class="max-w-md mx-auto bg-primary-blanco shadow-lg rounded-xl p-8 mt-10">
-    <h1 class="text-2xl font-bold text-center text-blue-600 mb-6">Iniciar Sesión</h1>
+    <h1 class="text-2xl font-bold text-center text-green-600 mb-6">Iniciar Sesión</h1>
     
     <form class="space-y-5" @submit.prevent="handleLogin">
       <!-- Email -->
@@ -37,7 +37,7 @@
       <button
         type="submit"
         :disabled="loading"
-        class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold py-3 rounded-lg flex items-center justify-center"
+        class="w-full bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white font-semibold py-3 rounded-lg flex items-center justify-center"
       >
         <Icon v-if="loading" name="mdi:loading" class="w-5 h-5 animate-spin mr-2" />
         {{ loading ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
@@ -46,7 +46,7 @@
       <!-- Link a registro -->
       <p class="text-center text-gray-600 text-sm">
         ¿No tienes cuenta?
-        <NuxtLink to="/register" class="text-blue-500 hover:underline">
+        <NuxtLink to="/register" class="text-green-500 hover:underline">
           Regístrate
         </NuxtLink>
       </p>
@@ -89,7 +89,7 @@ const handleLogin = async () => {
     })
 
     // Redirigir al dashboard después del login exitoso
-    await router.push('/prueba')
+    await router.push('/perfil')
   } catch (err) {
     console.error('Error durante el login:', err)
     error.value = err.message || 'Error durante el inicio de sesión. Verifica tus credenciales.'

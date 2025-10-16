@@ -38,50 +38,14 @@
         </button>
       </nav>
     </header>
-    <!-- Header
-    <header class="bg-primary-blanco border border-primary-verde shadow-md p-4 flex items-center justify-between">
-      <!-- Botón menú 
-      <button class="text-black text-2xl">
-        <i-tabler-menu-2 class="size-8"></i-tabler-menu-2>
-        <Icon name="mdi:menu" class="w-6 h-6" />
-      </button>
-
-      Logo 
-      <div class="flex items-center gap-3 font-extrabold text-3xl">
-        <Icon name="tabler:brand-nuxt" class="w-10 h-10 text-green-500 animate-bounce" />
-        <span
-          class="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 bg-clip-text text-transparent drop-shadow-lg tracking-wide hover:scale-105 transition-transform duration-300 ease-in-out">
-          INVIGEX
-        </span>
-      </div>
-
-
-      Menú principal 
-      <nav class="hidden md:flex gap-6 items-center">
-        <NuxtLink to="/nosotros" class="flex items-center gap-1 hover:text-blue-500">
-          <button
-            class="bg-purple-500 text-white font-semibold py-2 px-6 rounded-full shadow-md hover:bg-purple-600 transition-colors duration-300">Nosotros</button>
-        </NuxtLink>
-        <NuxtLink to="/login" class="flex items-center gap-1 hover:text-blue-500">
-          <button
-            class="bg-sky-400 text-white font-semibold py-2 px-6 rounded-full shadow-md hover:bg-sky-500 transition-colors duration-300">Iniciar
-            Sesión</button>
-        </NuxtLink>
-        <NuxtLink to="/register" class="flex items-center gap-1 hover:text-blue-500">
-          <button
-            class="bg-rose-700 text-white font-semibold py-2 px-6 rounded-full shadow-md hover:bg-rose-800 transition-colors duration-300">Registrarse</button>
-
-        </NuxtLink>
-      </nav>
-    </header> -->
-
+   
     <!-- Contenido principal -->
     <main class="flex-1 p-6">
       <slot />
     </main>
 
      <!-- Footer -->
-    <footer class="bg-gray-800 text-gray-300 pt-15">
+    <footer class="bg-stone-700 text-white pt-15">
       <div class="max-w-6xl mx-auto px-5">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
           <div>
@@ -94,17 +58,17 @@
           <div class="text-center">
             <h4 class="text-xl text-white mb-5">Navegación</h4>
             <ul class="space-y-3 inline-block text-left">
-              <li><a href="#features" class="hover:text-pink-500 transition-colors">Beneficios</a></li>
-              <li><a href="#process" class="hover:text-pink-500 transition-colors">Proceso</a></li>
-              <li><a href="#testimonials" class="hover:text-pink-500 transition-colors">Comentarios</a></li>
+              <li><a href="#features" class="hover:text-green-500 transition-colors">Beneficios</a></li>
+              <li><a href="#process" class="hover:text-green-500 transition-colors">Proceso</a></li>
+              <li><a href="#testimonials" class="hover:text-green-500 transition-colors">Comentarios</a></li>
             </ul>
           </div>
           
           <div class="text-center">
             <h4 class="text-xl text-white mb-5">Soporte</h4>
             <ul class="space-y-3 inline-block text-left">
-              <li><a href="#" class="hover:text-pink-500 transition-colors">Preguntas Frecuentes</a></li>
-              <li><a href="#" class="hover:text-pink-500 transition-colors">Centro de Ayuda</a></li>
+              <li><a href="#" class="hover:text-green-500 transition-colors">Preguntas Frecuentes</a></li>
+              <li><a href="#" class="hover:text-green-500 transition-colors">Centro de Ayuda</a></li>
             </ul>
           </div>
         </div>
@@ -121,3 +85,4 @@
     </footer> -->
   </div>
 </template>
+

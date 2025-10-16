@@ -38,10 +38,10 @@
 
     <main>
       <!-- Hero Section -->
-      <section class="bg-gradient-to-r from-indigo-500 to-sky-400 text-white py-20 min-h-[90vh] flex items-center">
-        <div class="max-w-6xl mx-auto px-5 flex flex-col lg:flex-row items-center justify-between gap-10">
+      <section class="bg-gradient-to-r from-lime-500 to-green-600 text-white py-10 min-h-[90vh] flex">
+        <div class=" mx-auto flex flex-col lg:flex-row items-center gap-x-4">
           <div class="lg:w-1/2 text-center lg:text-left">
-            <h1 class="text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight mb-5">
+            <h1 class="text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight mb-5 font-serif">
               Gestión de Inventarios SENA
             </h1>
             <p class="text-lg lg:text-xl mb-8 opacity-90 leading-relaxed">
@@ -51,8 +51,8 @@
               Empieza a Gestionar Ahora
             </p> -->
           </div>
-          <div class="lg:w-1/2 flex justify-center bg-gestion rounded-xl">
-            <div class="w-full max-w-md h-64 bg-white bg-opacity-20 rounded-lg shadow-2xl animate-pulse flex items-center justify-center">
+          <div class="lg:w-1/2 flex flex-row justify-between bg-gestion rounded-xl aspect-video gap-4">
+            <div class="rounded-lg shadow-2xl flex items-center justify-center">
               <!-- <span class="text-2xl font-semibold">INVIGEX</span> -->
             </div>
           </div>
@@ -139,7 +139,7 @@
             
             <div class="space-y-12">
               <div class="flex items-start relative">
-                <div class="w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center text-xl font-bold z-10 border-4 border-white shadow-lg">
+                <div class="w-12 h-12 bg-green-600 text-black rounded-full flex items-center justify-center text-xl font-bold z-10 border-4 border-white shadow-lg">
                   1
                 </div>
                 <div class="ml-8 flex-1">
@@ -151,7 +151,7 @@
               </div>
               
               <div class="flex items-start relative">
-                <div class="w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center text-xl font-bold z-10 border-4 border-white shadow-lg">
+                <div class="w-12 h-12 bg-green-600 text-black rounded-full flex items-center justify-center text-xl font-bold z-10 border-4 border-white shadow-lg">
                   2
                 </div>
                 <div class="ml-8 flex-1">
@@ -163,7 +163,7 @@
               </div>
               
               <div class="flex items-start relative">
-                <div class="w-12 h-12 bg-purple-600 text-white rounded-full flex items-center justify-center text-xl font-bold z-10 border-4 border-white shadow-lg">
+                <div class="w-12 h-12  bg-green-600 bg-withe-600 text-black rounded-full flex items-center justify-center text-xl font-bold z-10 border-4 border-white shadow-lg">
                   3
                 </div>
                 <div class="ml-8 flex-1">
@@ -223,7 +223,7 @@
       <!-- CTA Section -->
       <section 
         id="contact" 
-        :class="`py-20 bg-purple-600 text-white text-center transition-all duration-800 ${isVisible.contact ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`"
+        :class="`py-20 bg-green-600 text-white text-center transition-all duration-800 ${isVisible.contact ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`"
       >
         <div class="max-w-4xl mx-auto px-5">
           <h2 class="text-3xl lg:text-4xl font-bold mb-4">
@@ -232,7 +232,7 @@
           <p class="text-lg mb-8 opacity-90">
             Únete a cientos de equipos del SENA que ya están optimizando sus recursos.
           </p>
-          <a href="#" class="inline-block px-8 py-4 bg-pink-500 text-white rounded-lg text-lg font-semibold hover:bg-pink-600 hover:-translate-y-1 transition-all duration-300">
+          <a href="#" class="inline-block px-8 py-4 bg-lime-400 text-black rounded-lg text-lg font-semibold hover:bg-lime-800 hover:-translate-y-1 transition-all duration-300">
             Crear Mi Cuenta Ahora
           </a>
         </div>
@@ -240,7 +240,7 @@
     </main>
 
     <!-- Footer
-    <footer class="bg-gray-800 text-gray-300 pt-15">
+    <footer class="bg-stone-400 text-gray-300 pt-15">
       <div class="max-w-6xl mx-auto px-5">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
           <div>
