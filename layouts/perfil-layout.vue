@@ -167,7 +167,7 @@ const sidebarOpen = ref(false);
 
 // Datos del usuario
 const userName = computed(() => user.value?.nombre_completo || 'Usuario');
-const userRole = computed(() => user.value?.rol || 'USUARIO');
+const userRole = computed(() => user.value?.rol_usuario || 'USUARIO');
 
 // Menú filtrado por rol
 const visibleMenuItems = computed(() => {

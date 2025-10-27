@@ -111,8 +111,8 @@ async function registro() {
       email: email.value,
       password: password.value,
       telefono: telefono.value,
-      rol: rol_usuario.value, // El backend espera 'rol' en el DTO
-      estado: estado_usuario.value // El backend espera 'estado' en el DTO
+      rol_usuario: rol_usuario.value, // El backend espera 'rol' en el DTO
+      estado_usuario: estado_usuario.value // El backend espera 'estado' en el DTO
     });
 
     // ✅ El backend ya hace login automático, redirigir al dashboard
