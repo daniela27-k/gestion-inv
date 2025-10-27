@@ -202,7 +202,7 @@ import { useApi } from '~/composables/useApi';
 import { useRouter } from 'vue-router';
 
 definePageMeta({
-  layout: 'profile-layout'
+  layout: 'perfil-layout'
 });
 
 const { logout } = useAuth();
