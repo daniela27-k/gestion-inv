@@ -22,7 +22,7 @@
             <li><a href="#features" class="text-gray-700 font-medium hover:text-slate-400 transition-colors">Beneficios</a></li>
             <li><a href="#process" class="text-gray-700 font-medium hover:text-slate-400 transition-colors">¿Cómo funciona?</a></li>
             <li><a href="#testimonials" class="text-gray-700 font-medium hover:text-slate-400 transition-colors">Comentarios</a></li>
-            <li><a href="#contact" class="text-gray-700 font-medium hover:text-slate-400 transition-colors">Soporte</a></li>
+            <li><a href="nosotros" class="text-gray-700 font-medium hover:text-slate-400 transition-colors">Nosotros</a></li>
           </ul>
           <div class="flex flex-col lg:flex-row gap-4 lg:gap-4 mt-5 lg:mt-0">
             <a href="login" class="px-6 py-3 border-2 border-green-600 text-black-100 rounded hover:bg-green-600 hover:text-white transition-all">Inicia Sesión</a>
