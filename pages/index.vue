@@ -1,297 +1,345 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
-    <!-- Header
-    <header class="bg-white shadow-md sticky top-0 z-50 py-4">
-      <nav class="max-w-6xl mx-auto px-5 flex justify-between items-center">
-        <a href="#" class="flex items-center">
-          <!-- Logo 
-      <div class="flex items-center gap-3 font-extrabold text-3xl">
-        <Icon name="tabler:brand-nuxt" class="w-10 h-10 text-green-500 animate-bounce" />
-        <span
-          class="bg-gradient-to-r from-green-600 via-black-700 to-green-800 bg-clip-text text-transparent drop-shadow-lg tracking-wide hover:scale-105 transition-transform duration-300 ease-in-out">
-          INVIGEX
-        </span>
+  <div>
+    <!-- Hero Section -->
+    <section class="relative overflow-hidden bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-700 text-white">
+      <!-- Decorative background -->
+      <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-20 right-20 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+        <div class="absolute bottom-20 left-20 w-96 h-96 bg-teal-300 rounded-full blur-3xl"></div>
       </div>
-        </a>
-        
-        <div :class="`lg:flex items-center gap-8 ${isMenuOpen ? 'flex' : 'hidden'} lg:static absolute top-20 left-0 w-full lg:w-auto bg-white lg:bg-transparent flex-col lg:flex-row p-5 lg:p-0 shadow-lg lg:shadow-none`">
-          <ul class="flex flex-col lg:flex-row gap-8 lg:gap-8 text-center lg:text-left">
-            <li><a href="#features" class="text-gray-700 font-medium hover:text-slate-400 transition-colors">Beneficios</a></li>
-            <li><a href="#process" class="text-gray-700 font-medium hover:text-slate-400 transition-colors">¿Cómo funciona?</a></li>
-            <li><a href="#testimonials" class="text-gray-700 font-medium hover:text-slate-400 transition-colors">Comentarios</a></li>
-            <li><a href="#contact" class="text-gray-700 font-medium hover:text-slate-400 transition-colors">Soporte</a></li>
-          </ul>
-          <div class="flex flex-col lg:flex-row gap-4 lg:gap-4 mt-5 lg:mt-0">
-            <a href="login" class="px-6 py-3 border-2 border-green-600 text-black-100 rounded hover:bg-green-600 hover:text-white transition-all">Inicia Sesión</a>
-            <a href="#" class="px-6 py-3 border-2 border-green-600 text-black-100 rounded hover:bg-green-600 hover:text-white transition-all">Registrarse</a>
-          </div>
-        </div>
-        
-        <button 
-          class="lg:hidden text-2xl"
-          @click="toggleMenu"
-        >
-          <i :class="isMenuOpen ? 'fas fa-times' : 'fas fa-bars'"></i>
-        </button>
-      </nav>
-    </header> -->
 
-    <main>
-      <!-- Hero Section -->
-      <section class="bg-gradient-to-r from-lime-500 to-green-600 text-white py-10 min-h-[90vh] flex">
-        <div class=" mx-auto flex flex-col lg:flex-row items-center gap-x-4">
-          <div class="lg:w-1/2 text-center lg:text-left">
-            <h1 class="text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight mb-5 font-serif">
-              Gestión de Inventarios SENA
+      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <!-- Left Content -->
+          <div class="text-center lg:text-left space-y-8">
+            <div class="inline-block px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-semibold">
+              ✨ Plataforma #1 para el SENA
+            </div>
+            
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
+              Gestión de Inventarios
+              <span class="block text-emerald-200">Simple y Eficiente</span>
             </h1>
-            <p class="text-lg lg:text-xl mb-8 opacity-90 leading-relaxed">
-              Controla, gestiona y optimiza los recursos de tus proyectos formativos y unidades productivas y diseñado para la comunidad SENA.
+            
+            <p class="text-xl text-emerald-100 leading-relaxed max-w-2xl">
+              Controla, gestiona y optimiza los recursos de tus proyectos formativos con la plataforma diseñada especialmente para la comunidad SENA.
             </p>
-            <!-- <p href="#" class="inline-block px-8 py-4 bg-purple-700 text-white rounded-lg text-lg font-semibold">
-              Empieza a Gestionar Ahora
-            </p> -->
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              <NuxtLink to="/register" class="px-8 py-4 bg-white text-emerald-600 font-bold rounded-lg shadow-xl hover:shadow-2xl hover:scale-105 transition-all">
+                Empezar Gratis
+              </NuxtLink>
+              <a href="/nosotros" class="px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-lg border-2 border-white/30 hover:bg-white/20 transition-all">
+                Conocer Más
+              </a>
+            </div>
+
+            <!-- Stats -->
+            <div class="grid grid-cols-3 gap-8 pt-8 border-t border-white/20">
+              <div>
+                <div class="text-3xl font-bold">500+</div>
+                <div class="text-emerald-200 text-sm">Usuarios Activos</div>
+              </div>
+              <div>
+                <div class="text-3xl font-bold">50K+</div>
+                <div class="text-emerald-200 text-sm">Productos Gestionados</div>
+              </div>
+              <div>
+                <div class="text-3xl font-bold">99%</div>
+                <div class="text-emerald-200 text-sm">Satisfacción</div>
+              </div>
+            </div>
           </div>
-          <div class="lg:w-1/2 flex flex-row justify-between bg-gestion rounded-xl aspect-video gap-4">
-            <div class="rounded-lg shadow-2xl flex items-center justify-center">
-              <!-- <span class="text-2xl font-semibold">INVIGEX</span> -->
+
+          <!-- Right Image -->
+          <div class="relative">
+            <div class="relative rounded-2xl overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-500">
+              <img 
+                src="https://images.unsplash.com/photo-1553413077-190dd305871c?w=800&q=80" 
+                alt="Gestión de Inventarios" 
+                class="w-full h-auto"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-emerald-900/50 to-transparent"></div>
+            </div>
+            
+            <!-- Floating Card -->
+            <div class="absolute -bottom-6 -left-6 bg-white rounded-xl shadow-2xl p-4 animate-float">
+              <div class="flex items-center space-x-3">
+                <div class="w-12 h-12 bg-emerald-100 rounded-lg flex items-center justify-center">
+                  <Icon name="mdi:chart-line" class="w-6 h-6 text-emerald-600" />
+                </div>
+                <div>
+                  <div class="text-2xl font-bold text-gray-900">+85%</div>
+                  <div class="text-sm text-gray-600">Eficiencia</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </section>
+      </div>
 
-      <!-- Features Section -->
-      <section 
-        id="features" 
-        :class="`py-25 transition-all duration-800 ${isVisible.features ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`"
-      >
-        <div class="max-w-6xl mx-auto px-5">
-          <div class="text-center mb-15">
-            <h2 class="text-3xl lg:text-4xl font-bold mb-3">
-              Transforma la Gestión de tu Inventario
-            </h2>
-            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-              Descubre las herramientas que te ayudarán a tener un control total y eficiente.
-            </p>
-          </div>
-          
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div class="bg-white p-10 rounded-lg text-center shadow-md hover:-translate-y-3 hover:shadow-xl transition-all duration-300">
-              <div class="text-5xl text-pink-500 mb-5">
-                <i class="fas fa-boxes-stacked"></i>
+      <!-- Wave Divider -->
+      <div class="absolute bottom-0 left-0 right-0">
+        <svg viewBox="0 0 1440 120" class="w-full h-16 fill-current text-white">
+          <path d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,48C1120,43,1280,53,1360,58.7L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"></path>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 lg:py-28 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+            Todo lo que Necesitas en un Solo Lugar
+          </h2>
+          <p class="text-xl text-gray-600">
+            Herramientas poderosas diseñadas para simplificar tu gestión de inventarios
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <!-- Feature Card 1 -->
+          <div class="group relative bg-gradient-to-br from-emerald-50 to-white p-8 rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 border border-emerald-100 hover:border-emerald-300">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-600 rounded-full blur-3xl opacity-0 group-hover:opacity-10 transition-opacity"></div>
+            <div class="relative">
+              <div class="w-16 h-16 bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <Icon name="mdi:package-variant" class="w-8 h-8 text-white" />
               </div>
-              <h3 class="text-xl font-semibold mb-4">Control Total de Stock</h3>
-              <p class="text-gray-600">
+              <h3 class="text-xl font-bold text-gray-900 mb-3">Control Total de Stock</h3>
+              <p class="text-gray-600 leading-relaxed">
                 Visualiza en tiempo real las entradas, salidas y existencias de todos tus productos y materiales.
               </p>
             </div>
-            
-            <div class="bg-white p-10 rounded-lg text-center shadow-md hover:-translate-y-3 hover:shadow-xl transition-all duration-300">
-              <div class="text-5xl text-pink-500 mb-5">
-                <i class="fas fa-chart-pie"></i>
-              </div>
-              <h3 class="text-xl font-semibold mb-4">Reportes y Estadísticas</h3>
-              <p class="text-gray-600">
-                Genera informes automáticos para tomar decisiones basadas en datos y optimizar tus recursos.
-              </p>
-            </div>
-            
-            <div class="bg-white p-10 rounded-lg text-center shadow-md hover:-translate-y-3 hover:shadow-xl transition-all duration-300">
-              <div class="text-5xl text-pink-500 mb-5">
-                <i class="fas fa-bell"></i>
-              </div>
-              <h3 class="text-xl font-semibold mb-4">Alertas Inteligentes</h3>
-              <p class="text-gray-600">
-                Configura notificaciones para niveles bajos de stock y nunca te quedes sin insumos para tus proyectos.
-              </p>
-            </div>
-            
-            <div class="bg-white p-10 rounded-lg text-center shadow-md hover:-translate-y-3 hover:shadow-xl transition-all duration-300">
-              <div class="text-5xl text-pink-500 mb-5">
-                <i class="fas fa-users"></i>
-              </div>
-              <h3 class="text-xl font-semibold mb-4">Gestión de Usuarios</h3>
-              <p class="text-gray-600">
-                Asigna permisos a los miembros de manera fácil y segura.
-              </p>
-            </div>
           </div>
-        </div>
-      </section>
 
-      <!-- Process Section -->
-      <section 
-        id="process" 
-        :class="`py-25 bg-white transition-all duration-800 ${isVisible.process ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`"
-      >
-        <div class="max-w-4xl mx-auto px-5">
-          <div class="text-center mb-15">
-            <h2 class="text-3xl lg:text-4xl font-bold mb-3">
-              Empieza en Menos de 5 Minutos
-            </h2>
-            <p class="text-lg text-gray-600">
-              Nuestro sistema está diseñado para ser intuitivo y fácil de usar desde el primer día.
-            </p>
-          </div>
-          
-          <div class="relative">
-            <!-- Timeline line -->
-            <div class="absolute left-6 top-0 bottom-0 w-1 bg-gray-200 hidden lg:block"></div>
-            
-            <div class="space-y-12">
-              <div class="flex items-start relative">
-                <div class="w-12 h-12 bg-green-600 text-black rounded-full flex items-center justify-center text-xl font-bold z-10 border-4 border-white shadow-lg">
-                  1
-                </div>
-                <div class="ml-8 flex-1">
-                  <h3 class="text-xl font-semibold mb-2">Crea tu Cuenta</h3>
-                  <p class="text-gray-600">
-                    Regístrate con tu correo institucional @misena.edu.co y obtén acceso inmediato.
-                  </p>
-                </div>
+          <!-- Feature Card 2 -->
+          <div class="group relative bg-gradient-to-br from-teal-50 to-white p-8 rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 border border-teal-100 hover:border-teal-300">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-teal-600 rounded-full blur-3xl opacity-0 group-hover:opacity-10 transition-opacity"></div>
+            <div class="relative">
+              <div class="w-16 h-16 bg-gradient-to-br from-teal-600 to-teal-700 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <Icon name="mdi:chart-bar" class="w-8 h-8 text-white" />
               </div>
-              
-              <div class="flex items-start relative">
-                <div class="w-12 h-12 bg-green-600 text-black rounded-full flex items-center justify-center text-xl font-bold z-10 border-4 border-white shadow-lg">
-                  2
-                </div>
-                <div class="ml-8 flex-1">
-                  <h3 class="text-xl font-semibold mb-2">Carga tu Inventario</h3>
-                  <p class="text-gray-600">
-                    Importa tus productos y materiales fácilmente desde una plantilla de Excel o añádelos manualmente.
-                  </p>
-                </div>
-              </div>
-              
-              <div class="flex items-start relative">
-                <div class="w-12 h-12  bg-green-600 bg-withe-600 text-black rounded-full flex items-center justify-center text-xl font-bold z-10 border-4 border-white shadow-lg">
-                  3
-                </div>
-                <div class="ml-8 flex-1">
-                  <h3 class="text-xl font-semibold mb-2">¡Listo para Gestionar!</h3>
-                  <p class="text-gray-600">
-                    Empieza a registrar movimientos, generar reportes y a tener el control total de tu inventario.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Testimonials Section -->
-      <section 
-        id="testimonials" 
-        :class="`py-25 transition-all duration-800 ${isVisible.testimonials ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`"
-      >
-        <div class="max-w-6xl mx-auto px-5">
-          <div class="text-center mb-15">
-            <h2 class="text-3xl lg:text-4xl font-bold mb-3">
-              Lo que dicen nuestros usuarios
-            </h2>
-          </div>
-          
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div class="bg-white p-8 rounded-lg shadow-md">
-              <p class="italic text-gray-700 mb-5 text-lg leading-relaxed">
-                "Esta herramienta ha simplificado por completo la gestión de nuestro proyecto. Ahora sabemos exactamente qué tenemos y qué necesitamos. ¡Imprescindible!"
+              <h3 class="text-xl font-bold text-gray-900 mb-3">Reportes Inteligentes</h3>
+              <p class="text-gray-600 leading-relaxed">
+                Genera informes automáticos para tomar decisiones basadas en datos y optimizar recursos.
               </p>
-              <div class="flex items-center">
-                <div class="w-12 h-12 bg-gray-300 rounded-full mr-4"></div>
-                <div>
-                  <strong class="block text-gray-900">Rafael Petro Madera</strong>
-                  <span class="text-gray-600 text-sm">Líder de Proyecto, TecnoADSO</span>
-                </div>
-              </div>
             </div>
-            
-            <div class="bg-white p-8 rounded-lg shadow-md">
-              <p class="italic text-gray-700 mb-5 text-lg leading-relaxed">
-                "La facilidad para generar reportes nos ha ahorrado horas de trabajo. Es la solución perfecta para las unidades productivas del SENA."
+          </div>
+
+          <!-- Feature Card 3 -->
+          <div class="group relative bg-gradient-to-br from-emerald-50 to-white p-8 rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 border border-emerald-100 hover:border-emerald-300">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-600 rounded-full blur-3xl opacity-0 group-hover:opacity-10 transition-opacity"></div>
+            <div class="relative">
+              <div class="w-16 h-16 bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <Icon name="mdi:bell-alert" class="w-8 h-8 text-white" />
+              </div>
+              <h3 class="text-xl font-bold text-gray-900 mb-3">Alertas Automáticas</h3>
+              <p class="text-gray-600 leading-relaxed">
+                Notificaciones inteligentes para niveles bajos de stock y nunca quedarte sin insumos.
               </p>
-              <div class="flex items-center">
-                <div class="w-12 h-12 bg-gray-300 rounded-full mr-4"></div>
-                <div>
-                  <strong class="block text-gray-900">Aly Culchac</strong>
-                  <span class="text-gray-600 text-sm">Instructor, Centro de Diseño y Programación</span>
-                </div>
-              </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      <!-- CTA Section -->
-      <section 
-        id="contact" 
-        :class="`py-20 bg-green-600 text-white text-center transition-all duration-800 ${isVisible.contact ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`"
-      >
-        <div class="max-w-4xl mx-auto px-5">
-          <h2 class="text-3xl lg:text-4xl font-bold mb-4">
-            ¿Listo para tomar el control de tu inventario?
-          </h2>
-          <p class="text-lg mb-8 opacity-90">
-            Únete a cientos de equipos del SENA que ya están optimizando sus recursos.
-          </p>
-          <a href="#" class="inline-block px-8 py-4 bg-lime-400 text-black rounded-lg text-lg font-semibold hover:bg-lime-800 hover:-translate-y-1 transition-all duration-300">
-            Crear Mi Cuenta Ahora
-          </a>
-        </div>
-      </section>
-    </main>
-
-    <!-- Footer
-    <footer class="bg-stone-400 text-gray-300 pt-15">
-      <div class="max-w-6xl mx-auto px-5">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
-          <div>
-            <h4 class="text-xl text-white mb-5">Inventario SENA</h4>
-            <p class="leading-relaxed">
-              Una herramienta creada por y para la comunidad SENA.
-            </p>
+          <!-- Feature Card 4 -->
+          <div class="group relative bg-gradient-to-br from-teal-50 to-white p-8 rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 border border-teal-100 hover:border-teal-300">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-teal-600 rounded-full blur-3xl opacity-0 group-hover:opacity-10 transition-opacity"></div>
+            <div class="relative">
+              <div class="w-16 h-16 bg-gradient-to-br from-teal-600 to-teal-700 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <Icon name="mdi:account-group" class="w-8 h-8 text-white" />
+              </div>
+              <h3 class="text-xl font-bold text-gray-900 mb-3">Gestión de Usuarios</h3>
+              <p class="text-gray-600 leading-relaxed">
+                Asigna permisos y roles a los miembros de tu equipo de manera fácil y segura.
+              </p>
+            </div>
           </div>
-          
-          <div class="text-center">
-            <h4 class="text-xl text-white mb-5">Navegación</h4>
-            <ul class="space-y-3 inline-block text-left">
-              <li><a href="#features" class="hover:text-pink-500 transition-colors">Beneficios</a></li>
-              <li><a href="#process" class="hover:text-pink-500 transition-colors">Proceso</a></li>
-              <li><a href="#testimonials" class="hover:text-pink-500 transition-colors">Comentarios</a></li>
-            </ul>
-          </div>
-          
-          <div class="text-center">
-            <h4 class="text-xl text-white mb-5">Soporte</h4>
-            <ul class="space-y-3 inline-block text-left">
-              <li><a href="#" class="hover:text-pink-500 transition-colors">Preguntas Frecuentes</a></li>
-              <li><a href="#" class="hover:text-pink-500 transition-colors">Centro de Ayuda</a></li>
-            </ul>
-          </div>
-        </div>
-        
-        <div class="border-t border-gray-700 py-5 text-center text-sm">
-          <p>&copy; 2025 Inventario SENA. Todos los derechos reservados.</p>
         </div>
       </div>
-    </footer> -->
+    </section>
+
+    <!-- Process Section -->
+    <section id="process" class="py-20 lg:py-28 bg-gradient-to-b from-emerald-50 to-white">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+            Comienza en 3 Simples Pasos
+          </h2>
+          <p class="text-xl text-gray-600">
+            Tu inventario organizado en menos de 5 minutos
+          </p>
+        </div>
+
+        <div class="relative">
+          <!-- Timeline line -->
+          <div class="hidden lg:block absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-emerald-300 via-emerald-400 to-emerald-500 transform -translate-x-1/2"></div>
+
+          <!-- Step 1 -->
+          <div class="relative mb-16 lg:mb-24">
+            <div class="flex flex-col lg:flex-row items-center gap-8">
+              <div class="lg:w-1/2 lg:text-right lg:pr-16">
+                <div class="inline-block lg:block">
+                  <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-600 to-emerald-700 text-white rounded-2xl font-bold text-2xl shadow-lg mb-4">
+                    1
+                  </div>
+                  <h3 class="text-2xl font-bold text-gray-900 mb-3">Crea tu Cuenta</h3>
+                  <p class="text-gray-600 leading-relaxed max-w-md mx-auto lg:mx-0 lg:ml-auto">
+                    Regístrate con tu correo institucional @misena.edu.co y obtén acceso inmediato a todas las funcionalidades.
+                  </p>
+                </div>
+              </div>
+              <div class="lg:w-1/2 lg:pl-16">
+                <div class="relative rounded-2xl overflow-hidden shadow-xl">
+                  <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80" alt="Crear cuenta" class="w-full h-64 object-cover" />
+                  <div class="absolute inset-0 bg-gradient-to-t from-emerald-900/30 to-transparent"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="relative mb-16 lg:mb-24">
+            <div class="flex flex-col lg:flex-row-reverse items-center gap-8">
+              <div class="lg:w-1/2 lg:text-left lg:pl-16">
+                <div class="inline-block lg:block">
+                  <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-teal-600 to-teal-700 text-white rounded-2xl font-bold text-2xl shadow-lg mb-4">
+                    2
+                  </div>
+                  <h3 class="text-2xl font-bold text-gray-900 mb-3">Carga tu Inventario</h3>
+                  <p class="text-gray-600 leading-relaxed max-w-md mx-auto lg:mx-0">
+                    Importa tus productos desde Excel o añádelos manualmente. Organiza por categorías y ubicaciones.
+                  </p>
+                </div>
+              </div>
+              <div class="lg:w-1/2 lg:pr-16">
+                <div class="relative rounded-2xl overflow-hidden shadow-xl">
+                  <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600&q=80" alt="Cargar inventario" class="w-full h-64 object-cover" />
+                  <div class="absolute inset-0 bg-gradient-to-t from-teal-900/30 to-transparent"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="relative">
+            <div class="flex flex-col lg:flex-row items-center gap-8">
+              <div class="lg:w-1/2 lg:text-right lg:pr-16">
+                <div class="inline-block lg:block">
+                  <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-600 to-emerald-700 text-white rounded-2xl font-bold text-2xl shadow-lg mb-4">
+                    3
+                  </div>
+                  <h3 class="text-2xl font-bold text-gray-900 mb-3">¡Gestiona y Optimiza!</h3>
+                  <p class="text-gray-600 leading-relaxed max-w-md mx-auto lg:mx-0 lg:ml-auto">
+                    Registra movimientos, genera reportes y mantén el control total de tu inventario en tiempo real.
+                  </p>
+                </div>
+              </div>
+              <div class="lg:w-1/2 lg:pl-16">
+                <div class="relative rounded-2xl overflow-hidden shadow-xl">
+                  <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80" alt="Gestionar inventario" class="w-full h-64 object-cover" />
+                  <div class="absolute inset-0 bg-gradient-to-t from-emerald-900/30 to-transparent"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="py-20 lg:py-28 bg-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+            Historias de Éxito
+          </h2>
+          <p class="text-xl text-gray-600">
+            Lo que dicen los usuarios de INVIGEX
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8">
+          <!-- Testimonial 1 -->
+          <div class="bg-gradient-to-br from-emerald-50 to-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow border border-emerald-100">
+            <div class="flex items-center mb-6">
+              <div class="w-16 h-16 bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-full flex items-center justify-center text-white text-xl font-bold">
+                RP
+              </div>
+              <div class="ml-4">
+                <div class="font-bold text-gray-900 text-lg">Rafael Petro</div>
+                <div class="text-emerald-600 text-sm">Líder de Proyecto • TecnoADSO</div>
+              </div>
+            </div>
+            <div class="flex mb-4">
+              <Icon v-for="i in 5" :key="i" name="mdi:star" class="w-5 h-5 text-yellow-400" />
+            </div>
+            <p class="text-gray-700 leading-relaxed italic">
+              "Esta herramienta ha simplificado completamente la gestión de nuestro proyecto. Ahora sabemos exactamente qué tenemos y qué necesitamos. ¡Imprescindible para cualquier instructor!"
+            </p>
+          </div>
+
+          <!-- Testimonial 2 -->
+          <div class="bg-gradient-to-br from-teal-50 to-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow border border-teal-100">
+            <div class="flex items-center mb-6">
+              <div class="w-16 h-16 bg-gradient-to-br from-teal-600 to-teal-700 rounded-full flex items-center justify-center text-white text-xl font-bold">
+                AC
+              </div>
+              <div class="ml-4">
+                <div class="font-bold text-gray-900 text-lg">Aly Culchac</div>
+                <div class="text-teal-600 text-sm">Instructor • Centro de Diseño</div>
+              </div>
+            </div>
+            <div class="flex mb-4">
+              <Icon v-for="i in 5" :key="i" name="mdi:star" class="w-5 h-5 text-yellow-400" />
+            </div>
+            <p class="text-gray-700 leading-relaxed italic">
+              "La facilidad para generar reportes nos ha ahorrado horas de trabajo. Es la solución perfecta para las unidades productivas del SENA. Muy recomendado."
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="relative py-20 lg:py-28 bg-gradient-to-br from-emerald-600 via-emerald-700 to-teal-700 text-white overflow-hidden">
+      <!-- Background decoration -->
+      <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-teal-300 rounded-full blur-3xl"></div>
+      </div>
+
+      <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-4xl lg:text-5xl font-bold mb-6">
+          ¿Listo para Optimizar tu Inventario?
+        </h2>
+        <p class="text-xl text-emerald-100 mb-10 max-w-2xl mx-auto">
+          Únete a cientos de equipos del SENA que ya están transformando la gestión de sus recursos con INVIGEX.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <NuxtLink to="/register" class="px-8 py-4 bg-white text-emerald-600 font-bold rounded-lg shadow-xl hover:shadow-2xl hover:scale-105 transition-all">
+            Crear Cuenta Gratis
+          </NuxtLink>
+          <NuxtLink to="/nosotros" class="px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-lg border-2 border-white/30 hover:bg-white/20 transition-all">
+            Conocer Más
+          </NuxtLink>
+        </div>
+        <p class="text-emerald-200 text-sm mt-8">
+          ✓ Sin tarjeta de crédito • ✓ Configuración en minutos • ✓ Soporte incluido
+        </p>
+      </div>
+    </section>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
+
 definePageMeta({
   layout: 'public'
 })
 
-// Estados reactivos
-const isMenuOpen = ref(false)
 const isVisible = ref({})
 
-// Métodos
-const toggleMenu = () => {
-  isMenuOpen.value = !isMenuOpen.value
-}
-
-// Observador de scroll para animaciones
 onMounted(() => {
   const observer = new IntersectionObserver(
     (entries) => {
@@ -309,47 +357,21 @@ onMounted(() => {
     observer.observe(section)
   })
 
-  // Limpiar observador al desmontar
   return () => observer.disconnect()
 })
 </script>
 
-<style>
-/* Clases personalizadas de Tailwind si necesitas alguna */
-.py-25 {
-  padding-top: 6.25rem;
-  padding-bottom: 6.25rem;
+<style scoped>
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
-.pt-15 {
-  padding-top: 3.75rem;
-}
-
-.mb-15 {
-  margin-bottom: 3.75rem;
+.animate-float {
+  animation: float 3s ease-in-out infinite;
 }
 </style>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
