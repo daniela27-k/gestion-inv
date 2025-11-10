@@ -204,6 +204,8 @@ import { useRouter } from 'vue-router'
 
 definePageMeta({
   layout: 'public'
+
+
 })
 
 const email = ref('')
