@@ -222,9 +222,25 @@ export const menuItems: MenuItem[] = [
     description: 'Ver elementos asignados a mí'
   },
   {
+    id: 'tipos-elemento',
+    name: 'Tipos de Elemento',
+    path: '/admin/tipos-elemento',
+    icon: 'mdi:tag-multiple',
+    requiredPermissions: ['gestionar_tipos_elemento'],
+    description: 'Configurar categorías de elementos'
+  },
+  {
+    id: 'estados-elemento',
+    name: 'Estados de Elemento',
+    path: '/admin/estados-elemento',
+    icon: 'mdi:state-machine',
+    requiredPermissions: ['gestionar_estados'],
+    description: 'Configurar estados del inventario'
+  },
+  {
     id: 'ambientes',
     name: 'Gestión de Ambientes',
-    path: '/ambientes',
+    path: '/admin/ambientes',
     icon: 'mdi:door',
     requiredPermissions: ['crear_ambiente', 'editar_ambiente', 'eliminar_ambiente'],
     description: 'Administrar salones y espacios'
@@ -244,22 +260,6 @@ export const menuItems: MenuItem[] = [
     icon: 'mdi:alert-circle',
     requiredPermissions: ['registrar_novedad'],
     description: 'Reportar incidentes o cambios'
-  },
-  {
-    id: 'tipo-elemento',
-    name: 'Tipos de Elemento',
-    path: '/tipo-elemento',
-    icon: 'mdi:tag-multiple',
-    requiredPermissions: ['gestionar_tipos_elemento'],
-    description: 'Configurar categorías'
-  },
-  {
-    id: 'estados',
-    name: 'Estados de Elemento',
-    path: '/estados',
-    icon: 'mdi:state-machine',
-    requiredPermissions: ['gestionar_estados'],
-    description: 'Configurar estados del inventario'
   },
   {
     id: 'reportes',
@@ -467,4 +467,3 @@ export function getEstadoAmbienteColor(estado: string): string {
       return 'bg-gray-100 text-gray-800'
   }
 }
-
