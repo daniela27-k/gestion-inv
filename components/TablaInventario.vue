@@ -21,12 +21,12 @@
           <td class="px-6 py-4 text-sm text-gray-700">{{ item.numero_serial }}</td>
           <td class="px-6 py-4">
             <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">
-              {{ item.tipo_elemento?.nombre_tipo || 'N/A' }}
+              {{ item.tipoElemento?.nombre_tipo || 'N/A' }}
             </span>
           </td>
           <td class="px-6 py-4">
             <span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">
-              {{ item.estado_elemento?.nombre_estado || 'N/A' }}
+              {{ item.estadoElemento?.nombre_estado || 'N/A' }}
             </span>
           </td>
           <td class="px-6 py-4 text-sm text-gray-700">
