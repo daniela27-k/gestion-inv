@@ -156,7 +156,7 @@
 import { ref, computed, onMounted, watch } from "vue";
 import { Icon } from "@iconify/vue";
 import { getMenuItemsForRol, getRoleBadgeColor, getBotonesAmbiente, getEstadoAmbienteColor } from "~/utils/rolConfig";
-import { useAmbiente } from "~/composables/useAmbiente";
+import { useAmbiente } from "~/composables/useAmbienteAntiguo";
 
 const sidebarOpen = ref(false);
 const dropdownOpen = ref(false);

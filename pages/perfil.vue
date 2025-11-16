@@ -82,6 +82,7 @@
                   >
                     <Icon 
                       :name="data.estado_usuario === 'activo' ? 'mdi:check-circle' : 'mdi:close-circle'" 
+                      
                       class="w-4 h-4" 
                     />
                     {{ data.estado_usuario === 'activo' ? 'Activo' : 'Inactivo' }}
