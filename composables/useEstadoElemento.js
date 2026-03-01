@@ -1,7 +1,7 @@
 // composables/useEstadoElemento.js
 export const useEstadoElemento = () => {
   const config = useRuntimeConfig()
-  const baseURL = config.public.apiBase || 'http://localhost:3001'
+  const baseURL = config.public.apiBaseUrl || 'http://localhost:3001'
 
   const estados = ref([])
   const loading = ref(false)

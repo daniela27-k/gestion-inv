@@ -286,7 +286,7 @@
 //     estadisticas,
 //     loading,
 //     error,
-    
+
 //     // Métodos
 //     fetchInventarios,
 //     fetchInventarioById,
@@ -309,7 +309,7 @@ import { ref } from 'vue'
 
 export const useInventario = () => {
   const config = useRuntimeConfig()
-  const baseURL = config.public.apiBase || 'http://localhost:3001'
+  const baseURL = config.public.apiBaseUrl || 'http://localhost:3001'
 
   const inventarios = ref([])
   const inventario = ref(null)
@@ -604,7 +604,7 @@ export const useInventario = () => {
     estadisticas,
     loading,
     error,
-    
+
     // Métodos
     fetchInventarios,
     fetchInventarioById,

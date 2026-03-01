@@ -1,7 +1,7 @@
 // composables/useAmbiente.js
 export const useAmbiente = () => {
   const config = useRuntimeConfig()
-  const baseURL = config.public.apiBase || 'http://localhost:3001'
+  const baseURL = config.public.apiBaseUrl || 'http://localhost:3001'
 
   const ambientes = ref([])
   const loading = ref(false)

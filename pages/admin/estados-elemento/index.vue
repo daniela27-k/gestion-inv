@@ -146,7 +146,7 @@ definePageMeta({
 
 const { estados, loading, fetchEstados } = useEstadoElemento()
 const config = useRuntimeConfig()
-const baseURL = config.public.apiBase || 'http://localhost:3001'
+const baseURL = config.public.apiBaseUrl || 'http://localhost:3001'
 
 const mensaje = ref({ texto: '', tipo: '' })
 const modalEliminar = ref({ show: false, estado: null })

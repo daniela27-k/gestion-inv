@@ -173,7 +173,7 @@ definePageMeta({
 })
 
 const config = useRuntimeConfig()
-const baseURL = config.public.apiBase || 'http://localhost:3001'
+const baseURL = config.public.apiBaseUrl || 'http://localhost:3001'
 
 const { user } = useAuth()
 const { inventarios, loading, fetchInventarios, updateInventario } = useInventario()

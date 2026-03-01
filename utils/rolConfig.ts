@@ -6,34 +6,34 @@ export interface Permisos {
   agregar_elemento: boolean
   editar_elemento: boolean
   dar_baja_elemento: boolean
-  
+
   // Permisos de asignaciones
   crear_asignacion: boolean
   editar_asignacion: boolean
   ver_asignaciones_propias: boolean
   ver_todas_asignaciones: boolean
-  
+
   // Permisos de ambientes
   ver_ambientes: boolean
   crear_ambiente: boolean
   editar_ambiente: boolean
   eliminar_ambiente: boolean
   ver_solo_mis_ambientes: boolean
-  
+
   // Permisos de tipos de elemento
   gestionar_tipos_elemento: boolean
-  
+
   // Permisos de estados
   gestionar_estados: boolean
-  
+
   // Permisos de novedades
   registrar_novedad: boolean
   ver_novedades_propias: boolean
   ver_todas_novedades: boolean
-  
+
   // Permisos de usuarios
   gestionar_usuarios: boolean
-  
+
   // Permisos de reportes
   generar_reportes_propios: boolean
   generar_reportes_globales: boolean
@@ -65,106 +65,106 @@ export const permisosPorRol: Record<Rol, Permisos> = {
     agregar_elemento: true,
     editar_elemento: true,
     dar_baja_elemento: true,
-    
-    // Asignaciones globales
+
+    // Asignaciones globales (admin ve todo desde /asignaciones, no necesita /mis-asignaciones)
     crear_asignacion: true,
     editar_asignacion: true,
-    ver_asignaciones_propias: true,
+    ver_asignaciones_propias: false, // Oculta "Mis Asignaciones" del menú — admin usa /asignaciones
     ver_todas_asignaciones: true,
-    
+
     // Ambientes completos
     ver_ambientes: true,
     crear_ambiente: true,
     editar_ambiente: true,
     eliminar_ambiente: true,
     ver_solo_mis_ambientes: false, // Ve todos
-    
+
     // Configuración del sistema
     gestionar_tipos_elemento: true,
     gestionar_estados: true,
-    
+
     // Novedades globales
     registrar_novedad: true,
     ver_novedades_propias: true,
     ver_todas_novedades: true,
-    
+
     // Usuarios
     gestionar_usuarios: true,
-    
+
     // Reportes globales
     generar_reportes_propios: true,
     generar_reportes_globales: true
   },
-  
+
   INSTRUCTOR: {
     // Inventario de consulta y gestión limitada
     ver_inventario: true,
     agregar_elemento: false, // Solo admin da de alta
     editar_elemento: true, // Puede actualizar ubicación, estado
     dar_baja_elemento: false, // Solo puede reportar, no dar de baja
-    
+
     // Asignaciones de sus ambientes
     crear_asignacion: true,
     editar_asignacion: true,
     ver_asignaciones_propias: true,
     ver_todas_asignaciones: false,
-    
+
     // Solo sus ambientes
     ver_ambientes: true,
     crear_ambiente: false,
     editar_ambiente: false,
     eliminar_ambiente: false,
     ver_solo_mis_ambientes: true,
-    
+
     // Sin permisos de configuración
     gestionar_tipos_elemento: false,
     gestionar_estados: false,
-    
+
     // Novedades de sus ambientes
     registrar_novedad: true,
     ver_novedades_propias: true,
     ver_todas_novedades: false,
-    
+
     // Sin gestión de usuarios
     gestionar_usuarios: false,
-    
+
     // Solo reportes de sus ambientes
     generar_reportes_propios: true,
     generar_reportes_globales: false
   },
-  
+
   USUARIO: {
     // Solo consulta básica
     ver_inventario: true,
     agregar_elemento: false,
     editar_elemento: false,
     dar_baja_elemento: false,
-    
+
     // Puede ver sus asignaciones
     crear_asignacion: false,
     editar_asignacion: false,
     ver_asignaciones_propias: true,
     ver_todas_asignaciones: false,
-    
+
     // Consulta básica de ambientes
     ver_ambientes: true,
     crear_ambiente: false,
     editar_ambiente: false,
     eliminar_ambiente: false,
     ver_solo_mis_ambientes: true,
-    
+
     // Sin configuración
     gestionar_tipos_elemento: false,
     gestionar_estados: false,
-    
+
     // Puede reportar novedades
     registrar_novedad: true,
     ver_novedades_propias: true,
     ver_todas_novedades: false,
-    
+
     // Sin gestión de usuarios
     gestionar_usuarios: false,
-    
+
     // Sin reportes
     generar_reportes_propios: false,
     generar_reportes_globales: false
@@ -282,7 +282,7 @@ export const menuItems: MenuItem[] = [
 // Función para filtrar menú según rol
 export function getMenuItemsForRol(rol: Rol): MenuItem[] {
   const permisos = permisosPorRol[rol]
-  
+
   return menuItems.filter(item => {
     // El item es visible si el usuario tiene AL MENOS uno de los permisos requeridos
     return item.requiredPermissions.some(permiso => permisos[permiso] === true)
@@ -292,7 +292,7 @@ export function getMenuItemsForRol(rol: Rol): MenuItem[] {
 // Botones de acción para elementos del inventario
 export function getBotonesInventario(rol: Rol): BotonAccion[] {
   const permisos = permisosPorRol[rol]
-  
+
   const botones: BotonAccion[] = [
     {
       id: 'ver-detalle',
@@ -323,14 +323,14 @@ export function getBotonesInventario(rol: Rol): BotonAccion[] {
       requiredPermission: 'dar_baja_elemento'
     }
   ]
-  
+
   return botones.filter(boton => permisos[boton.requiredPermission])
 }
 
 // Botones de acción para ambientes
 export function getBotonesAmbiente(rol: Rol): BotonAccion[] {
   const permisos = permisosPorRol[rol]
-  
+
   const botones: BotonAccion[] = [
     {
       id: 'ver',
@@ -361,7 +361,7 @@ export function getBotonesAmbiente(rol: Rol): BotonAccion[] {
       requiredPermission: 'eliminar_ambiente'
     }
   ]
-  
+
   return botones.filter(boton => permisos[boton.requiredPermission])
 }
 
@@ -372,12 +372,12 @@ export function tienePermiso(rol: Rol, permiso: keyof Permisos): boolean {
 
 // Verificar si un usuario puede realizar una acción sobre un elemento
 export function puedeRealizarAccion(
-  rol: Rol, 
+  rol: Rol,
   accion: 'ver' | 'crear' | 'editar' | 'eliminar',
   contexto: 'inventario' | 'ambiente' | 'asignacion' | 'usuario'
 ): boolean {
   const permisos = permisosPorRol[rol]
-  
+
   const mapaPermisos: Record<string, keyof Permisos> = {
     'ver-inventario': 'ver_inventario',
     'crear-inventario': 'agregar_elemento',
@@ -393,10 +393,10 @@ export function puedeRealizarAccion(
     'eliminar-asignacion': 'editar_asignacion',
     'gestionar-usuario': 'gestionar_usuarios'
   }
-  
+
   const key = `${accion}-${contexto}`
   const permisoRequerido = mapaPermisos[key]
-  
+
   return permisoRequerido ? permisos[permisoRequerido] : false
 }
 

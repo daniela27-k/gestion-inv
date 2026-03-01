@@ -232,9 +232,14 @@ import {
   tienePermiso
 } from '~/utils/rolConfig';
 
+// Protege todo el layout con el middleware de autenticación
+definePageMeta({
+  middleware: 'auth'
+})
+
 const route = useRoute();
 const router = useRouter();
-const { logout, user } = useAuth();
+const { logout, user, getProfile } = useAuth();
 const sidebarOpen = ref(false);
 
 // Datos del usuario
@@ -276,13 +281,11 @@ const handleLogout = async () => {
   }
 };
 
-// Debug en desarrollo
-onMounted(() => {
-  console.log('🔍 Debug Layout:');
-  console.log('User:', user.value);
-  console.log('User role:', userRole.value);
-  console.log('Visible menu items:', visibleMenuItems.value);
-  console.log('Current path:', route.path);
+// Rehidratación de sesión al recargar la página
+onMounted(async () => {
+  if (!user.value) {
+    await getProfile()
+  }
 });
 </script>
 

@@ -187,7 +187,7 @@ import { ref } from 'vue'
 
 export const useTipoElemento = () => {
   const config = useRuntimeConfig()
-  const baseURL = config.public.apiBase || 'http://localhost:3001'
+  const baseURL = config.public.apiBaseUrl || 'http://localhost:3001'
 
   const tipos = ref([])
   const loading = ref(false)

@@ -1,392 +1,481 @@
-<!-- pages/perfil.vue -->
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-7xl mx-auto">
-      
-      <!-- Loading State -->
-      <div v-if="pending" class="flex items-center justify-center min-h-[500px]">
-        <div class="text-center">
-          <div class="relative inline-flex">
-            <div class="w-20 h-20 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
-            <Icon name="mdi:account-circle" class="w-10 h-10 text-indigo-600 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <p class="mt-6 text-lg font-medium text-gray-700">Cargando tu perfil...</p>
-        </div>
-      </div>
+  <!-- pages/perfil.vue -->
+  <div class="perfil-page">
 
-      <!-- Error State -->
-      <div v-else-if="error" class="max-w-md mx-auto mt-20">
-        <div class="bg-white rounded-2xl shadow-xl p-8 border-2 border-red-200">
-          <div class="text-center">
-            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-4">
-              <Icon name="mdi:alert-circle" class="h-10 w-10 text-red-600" />
+    <!-- ── LOADING ── -->
+    <div v-if="pending" class="perfil-loading">
+      <div class="loading-spinner"></div>
+      <p>Cargando tu perfil...</p>
+    </div>
+
+    <!-- ── ERROR ── -->
+    <div v-else-if="error" class="perfil-error-card">
+      <div class="error-icon">⚠️</div>
+      <h3>Error al cargar perfil</h3>
+      <p>{{ error }}</p>
+      <NuxtLink to="/login" class="btn-primary">Iniciar sesión</NuxtLink>
+    </div>
+
+    <!-- ── CONTENIDO PRINCIPAL ── -->
+    <div v-else-if="profileData" class="perfil-content">
+
+      <!-- BANNER SUPERIOR -->
+      <div class="profile-banner">
+        <div class="banner-bg"></div>
+        <div class="banner-inner">
+          
+          <!-- Logo flotante INVIGEX -->
+          <div class="banner-logo">
+             <Icon name="mdi:shield-check" class="logo-icon" />
+             <span>INVIGEX</span>
+          </div>
+
+          <!-- Avatar + Foto -->
+          <div class="avatar-section">
+            <div class="avatar-wrapper">
+              <img
+                v-if="avatarSrc"
+                :src="avatarSrc"
+                alt="Foto de perfil"
+                class="avatar-img"
+              />
+              <div v-else class="avatar-placeholder">
+                <span>{{ getInitials(profileData.nombre_completo) }}</span>
+              </div>
+              <!-- Botón cambiar foto -->
+              <div @click="triggerFileInput" class="avatar-edit-btn" title="Cambiar foto">
+                <Icon name="mdi:camera" />
+              </div>
+              <input 
+                ref="fileInput"
+                type="file" 
+                accept="image/*" 
+                class="hidden-input" 
+                @change="handlePhotoChange" 
+              />
             </div>
-            <h3 class="text-2xl font-bold text-gray-900 mb-3">Error al cargar perfil</h3>
-            <p class="text-gray-600 mb-6">{{ error }}</p>
-            <NuxtLink 
-              to="/login" 
-              class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-blue-700 transform hover:scale-105 transition-all duration-200 shadow-lg"
-            >
-              <Icon name="mdi:login" class="w-5 h-5" />
-              Iniciar sesión
-            </NuxtLink>
+            <div v-if="photoSuccess" class="photo-success">✓ Foto actualizada</div>
           </div>
-        </div>
-      </div>
 
-      <!-- Profile Content -->
-      <div v-else-if="data" class="space-y-6">
-        
-        <!-- Header Card con Gradiente -->
-        <div class="relative bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 rounded-3xl shadow-2xl overflow-hidden">
-          <div class="absolute inset-0 bg-black/10"></div>
-          <div class="relative px-8 py-12">
-            <div class="flex flex-col md:flex-row items-center gap-6">
-              <!-- Avatar -->
-              <div class="relative">
-                <div class="w-32 h-32 rounded-full bg-white/30 backdrop-blur-lg border-4 border-white/50 flex items-center justify-center shadow-2xl">
-                  <Icon name="mdi:account-circle" class="w-16 h-16 text-white" />
-                </div>
-                <div class="absolute bottom-0 right-0 w-10 h-10 bg-green-500 rounded-full border-4 border-white shadow-lg flex items-center justify-center">
-                  <div class="w-3 h-3 bg-white rounded-full"></div>
-                </div>
-              </div>
-
-              <!-- Info -->
-              <div class="flex-1 text-center md:text-left">
-                <h1 class="text-4xl font-bold text-white mb-2">
-                  {{ data.nombre_completo }}
-                </h1>
-                <p class="text-xl text-white/90 mb-4">{{ data.email }}</p>
-                
-                <div class="flex flex-wrap gap-3 justify-center md:justify-start">
-                  <span 
-                    class="inline-flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-sm shadow-lg backdrop-blur-sm"
-                    :class="{
-                      'bg-yellow-400/90 text-yellow-900': data.rol_usuario === 'ADMIN',
-                      'bg-blue-400/90 text-blue-900': data.rol_usuario === 'INSTRUCTOR',
-                      'bg-green-400/90 text-green-900': data.rol_usuario === 'USUARIO'
-                    }"
-                  >
-                    <Icon name="mdi:shield-star" class="w-4 h-4" />
-                    {{ data.rol_usuario }}
-                  </span>
-                  
-                  <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-sm shadow-lg backdrop-blur-sm bg-green-400/90 text-green-900">
-                    <div class="w-2 h-2 bg-green-900 rounded-full"></div>
-                    Activo
-                  </span>
-                </div>
-              </div>
-
-              <!-- Botón Edit -->
-              <button 
-                @click="router.push('/perfil/settings')"
-                class="bg-white text-emerald-600 px-6 py-3 rounded-xl font-semibold hover:bg-emerald-50 transition-all shadow-lg hover:shadow-xl flex items-center gap-2"
-              >
-                <Icon name="mdi:pencil-outline" class="w-5 h-5" />
-                Editar Perfil
-              </button>
+          <!-- Info del usuario -->
+          <div class="banner-info">
+            <h1 class="banner-name">{{ profileData.nombre_completo }}</h1>
+            <p class="banner-email">{{ profileData.email }}</p>
+            <div class="banner-badges">
+              <span class="role-badge" :class="'role-' + profileData.rol_usuario?.toLowerCase()">
+                 {{ profileData.rol_usuario }}
+              </span>
+              <span class="status-badge">● Activo</span>
             </div>
           </div>
-        </div>
 
-        <!-- Tabs -->
-        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-          <div class="flex border-b overflow-x-auto">
-            <button
-              v-for="tab in tabs"
-              :key="tab.id"
-              @click="activeTab = tab.id"
-              class="flex-1 flex items-center justify-center gap-2 px-6 py-4 font-semibold transition-all whitespace-nowrap"
-              :class="activeTab === tab.id 
-                ? 'bg-emerald-500 text-white border-b-4 border-emerald-600' 
-                : 'text-gray-600 hover:bg-gray-50'"
-            >
-              <Icon :name="tab.icon" class="w-5 h-5" />
-              {{ tab.label }}
+          <!-- Botón editar (cabecera) -->
+          <div class="banner-actions">
+            <button v-if="!isEditing" class="btn-edit-header" @click="startEdit">
+              ✏️ Editar Perfil
             </button>
           </div>
         </div>
+      </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
-          <!-- Columna Principal -->
-          <div class="lg:col-span-2 space-y-6">
-            
-            <!-- Estadísticas -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div 
-                @click="handleViewAssignments" 
-                class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all cursor-pointer transform hover:scale-105"
-              >
-                <div class="flex items-center justify-between mb-4">
-                  <div class="p-3 bg-blue-100 rounded-xl">
-                    <Icon name="mdi:package-variant" class="w-6 h-6 text-blue-600" />
-                  </div>
-                </div>
-                <p class="text-3xl font-bold text-gray-900">{{ stats.elementosAsignados }}</p>
-                <p class="text-sm text-gray-600 mt-1">Elementos Asignados</p>
+      <!-- GRID PRINCIPAL -->
+      <div class="main-grid">
+
+        <!-- ── COLUMNA IZQUIERDA: Formulario ── -->
+        <div class="col-main">
+
+          <!-- TARJETA EDITAR PERFIL -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon card-icon--blue">
+                <Icon name="mdi:account" />
               </div>
-
-              <div 
-                @click="handleViewNovedades"
-                class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all cursor-pointer transform hover:scale-105"
-              >
-                <div class="flex items-center justify-between mb-4">
-                  <div class="p-3 bg-red-100 rounded-xl">
-                    <Icon name="mdi:alert-circle" class="w-6 h-6 text-red-600" />
-                  </div>
-                </div>
-                <p class="text-3xl font-bold text-gray-900">{{ stats.novedadesRegistradas }}</p>
-                <p class="text-sm text-gray-600 mt-1">Novedades Registradas</p>
-              </div>
-
-              <div 
-                @click="handleViewAmbientes"
-                class="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-all cursor-pointer transform hover:scale-105"
-              >
-                <div class="flex items-center justify-between mb-4">
-                  <div class="p-3 bg-emerald-100 rounded-xl">
-                    <Icon name="mdi:office-building" class="w-6 h-6 text-emerald-600" />
-                  </div>
-                </div>
-                <p class="text-3xl font-bold text-gray-900">{{ stats.ambientesGestionados }}</p>
-                <p class="text-sm text-gray-600 mt-1">Ambientes</p>
+              <h2>Información Personal</h2>
+              <div class="header-actions">
+                <button v-if="!isEditing" class="btn-outline" @click="startEdit">Editar</button>
+                <template v-else>
+                  <button class="btn-cancel" @click="cancelEdit" :disabled="saving">Cancelar</button>
+                  <button class="btn-save" @click="saveProfile" :disabled="saving">
+                    <span v-if="saving" class="btn-spinner"></span>
+                    {{ saving ? 'Guardando...' : 'Guardar' }}
+                  </button>
+                </template>
               </div>
             </div>
 
-            <!-- About Me -->
-            <div class="bg-white rounded-2xl shadow-lg p-8">
-              <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                <div class="p-2 bg-emerald-100 rounded-lg">
-                  <Icon name="mdi:account-details" class="w-6 h-6 text-emerald-600" />
-                </div>
-                Acerca de mí
-              </h2>
-              <p class="text-gray-700 leading-relaxed">
-                {{ getAboutMeText(data.rol_usuario) }}
-              </p>
-            </div>
+            <!-- Alertas -->
+            <div v-if="saveSuccess" class="alert-success">✅ Perfil actualizado correctamente</div>
+            <div v-if="saveError" class="alert-error">❌ {{ saveError }}</div>
 
-            <!-- Contact Info -->
-            <div class="bg-white rounded-2xl shadow-lg p-8">
-              <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-                <div class="p-2 bg-blue-100 rounded-lg">
-                  <Icon name="mdi:email-outline" class="w-6 h-6 text-blue-600" />
-                </div>
-                Información de Contacto
-              </h2>
-              
-              <div class="space-y-4">
-                <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                  <div class="p-3 bg-blue-100 rounded-lg">
-                    <Icon name="mdi:phone-outline" class="w-5 h-5 text-blue-600" />
-                  </div>
-                  <div>
-                    <p class="text-sm text-gray-500">Teléfono</p>
-                    <p class="font-semibold text-gray-900">{{ data.telefono }}</p>
-                  </div>
-                </div>
+            <div class="form-grid">
+              <div class="form-group form-group--full">
+                <label>Nombre Completo</label>
+                <input
+                  v-model="form.nombre_completo"
+                  :disabled="!isEditing"
+                  :class="['form-input', { 'form-input--error': errors.nombre_completo, 'form-input--active': isEditing }]"
+                />
+                <span v-if="errors.nombre_completo" class="form-error">{{ errors.nombre_completo }}</span>
+              </div>
 
-                <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                  <div class="p-3 bg-purple-100 rounded-lg">
-                    <Icon name="mdi:email-outline" class="w-5 h-5 text-purple-600" />
-                  </div>
-                  <div>
-                    <p class="text-sm text-gray-500">Correo Electrónico</p>
-                    <p class="font-semibold text-gray-900 break-all">{{ data.email }}</p>
-                  </div>
-                </div>
+              <div class="form-group">
+                <label>Correo Electrónico</label>
+                <input
+                  v-model="form.email"
+                  type="email"
+                  :disabled="!isEditing"
+                  :class="['form-input', { 'form-input--error': errors.email, 'form-input--active': isEditing }]"
+                />
+                <span v-if="errors.email" class="form-error">{{ errors.email }}</span>
+              </div>
 
-                <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                  <div class="p-3 bg-green-100 rounded-lg">
-                    <Icon name="mdi:calendar-outline" class="w-5 h-5 text-green-600" />
-                  </div>
-                  <div>
-                    <p class="text-sm text-gray-500">Miembro desde</p>
-                    <p class="font-semibold text-gray-900">{{ formatDate(data.created_at) }}</p>
-                  </div>
-                </div>
+              <div class="form-group">
+                <label>Teléfono</label>
+                <input
+                  v-model="form.telefono"
+                  :disabled="!isEditing"
+                  :class="['form-input', { 'form-input--error': errors.telefono, 'form-input--active': isEditing }]"
+                />
+                <span v-if="errors.telefono" class="form-error">{{ errors.telefono }}</span>
+              </div>
+
+              <div class="form-group">
+                <label>ID Usuario</label>
+                <input :value="profileData.id" disabled class="form-input form-input--readonly" />
+              </div>
+
+              <div class="form-group">
+                <label>Rol del Sistema</label>
+                <input :value="profileData.rol_usuario" disabled class="form-input form-input--readonly" />
               </div>
             </div>
-
           </div>
 
-          <!-- Sidebar Derecha -->
-          <div class="space-y-6">
-            
-            <!-- Acciones Rápidas -->
-            <div class="bg-white rounded-2xl shadow-lg p-6">
-              <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <Icon name="mdi:lightning-bolt" class="w-5 h-5 text-emerald-600" />
-                Acciones Rápidas
-              </h3>
-              
-              <div class="space-y-3">
-                <button 
-                  @click="handleViewAssignments"
-                  class="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all shadow-md hover:shadow-lg"
-                >
-                  <Icon name="mdi:package-variant" class="w-5 h-5" />
-                  <span>Mis Asignaciones</span>
-                </button>
-
-                <button 
-                  @click="handleViewNovedades"
-                  class="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold rounded-xl hover:from-red-600 hover:to-red-700 transition-all shadow-md hover:shadow-lg"
-                >
-                  <Icon name="mdi:alert-circle" class="w-5 h-5" />
-                  <span>Mis Novedades</span>
-                </button>
-
-                <button 
-                  @click="handleViewAmbientes"
-                  class="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-semibold rounded-xl hover:from-emerald-600 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg"
-                >
-                  <Icon name="mdi:office-building" class="w-5 h-5" />
-                  <span>Ambientes</span>
-                </button>
+          <!-- TARJETA SEGURIDAD -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon card-icon--purple">
+                <Icon name="mdi:lock" />
               </div>
+              <h2>Seguridad de la Cuenta</h2>
+              <button class="btn-outline" @click="togglePasswordSection">
+                {{ showPasswordSection ? 'Cancelar' : 'Cambiar Contraseña' }}
+              </button>
             </div>
 
-            <!-- Configuración -->
-            <div class="bg-white rounded-2xl shadow-lg p-6">
-              <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <Icon name="mdi:cog-outline" class="w-5 h-5 text-purple-600" />
-                Configuración
-              </h3>
-              
-              <div class="space-y-3">
-                <button 
-                  @click="router.push('/perfil/settings')"
-                  class="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white font-semibold rounded-xl hover:from-purple-600 hover:to-purple-700 transition-all shadow-md hover:shadow-lg"
-                >
-                  <Icon name="mdi:pencil-outline" class="w-5 h-5" />
-                  <span>Editar Perfil</span>
+            <div v-if="showPasswordSection" class="form-grid">
+               <div class="form-group form-group--full">
+                <label>Nueva contraseña</label>
+                <input v-model="passwordForm.new" type="password" class="form-input form-input--active" placeholder="Mínimo 8 caracteres" />
+                <span v-if="passwordErrors.new" class="form-error">{{ passwordErrors.new }}</span>
+              </div>
+              <div class="form-group form-group--full">
+                <button class="btn-save" @click="changePassword" :disabled="changingPassword">
+                   {{ changingPassword ? 'Procesando...' : 'Actualizar Contraseña' }}
                 </button>
-
-                <button 
-                  @click="router.push('/perfil/password')"
-                  class="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-indigo-500 to-indigo-600 text-white font-semibold rounded-xl hover:from-indigo-600 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg"
-                >
-                  <Icon name="mdi:lock-reset" class="w-5 h-5" />
-                  <span>Cambiar Contraseña</span>
-                </button>
-
-                <button 
-                  @click="handleLogout"
-                  class="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-red-600 to-rose-600 text-white font-semibold rounded-xl hover:from-red-700 hover:to-rose-700 transition-all shadow-md hover:shadow-lg"
-                >
-                  <Icon name="heroicons-outline:logout" class="w-5 h-5" />
-                  <span>Cerrar Sesión</span>
-                </button>
+                <div v-if="passwordSuccess" class="alert-success mt-2">✅ Contraseña actualizada</div>
               </div>
             </div>
-
-            <!-- Info Adicional -->
-            <div class="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl shadow-lg p-6 border-2 border-emerald-200">
-              <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <Icon name="mdi:information-outline" class="w-5 h-5 text-emerald-600" />
-                Estado de Cuenta
-              </h3>
-              
-              <div class="space-y-3">
-                <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
-                  <span class="text-sm text-gray-600">Perfil completado</span>
-                  <span class="text-sm font-bold text-emerald-600">100%</span>
-                </div>
-                <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
-                  <span class="text-sm text-gray-600">Último acceso</span>
-                  <span class="text-sm font-bold text-gray-800">Hoy</span>
-                </div>
-                <div class="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm">
-                  <span class="text-sm text-gray-600">Rol activo</span>
-                  <span class="text-sm font-bold text-blue-600">{{ data.rol_usuario }}</span>
-                </div>
-              </div>
-            </div>
-
+            <p v-else class="about-text">Tu cuenta está protegida con cifrado JWT. Se recomienda cambiar la contraseña periódicamente.</p>
           </div>
         </div>
 
-      </div>
+        <!-- ── COLUMNA DERECHA: Sidebar ── -->
+        <div class="col-sidebar">
+          
+          <!-- RESUMEN ESTADÍSTICO -->
+          <div class="stats-grid">
+            <div class="stat-box blue" @click="router.push('/mis-asignaciones')">
+              <div class="stat-icon"><Icon name="mdi:package-variant" /></div>
+              <div class="stat-val">{{ stats.elementosAsignados }}</div>
+              <div class="stat-lab">Asignaciones</div>
+            </div>
+            <div class="stat-box red" @click="router.push('/novedades')">
+              <div class="stat-icon"><Icon name="mdi:alert-rhombus" /></div>
+              <div class="stat-val">{{ stats.novedadesRegistradas }}</div>
+              <div class="stat-lab">Novedades</div>
+            </div>
+          </div>
 
+          <!-- ACCIONES RÁPIDAS -->
+          <div class="card">
+            <h3 class="sidebar-title">Navegación Rápida</h3>
+            <div class="vertical-actions">
+              <button class="action-row" @click="router.push('/inventario/consultar')">
+                <Icon name="mdi:magnify" class="act-icon bg-blue" />
+                <span>Consultar Inventario</span>
+              </button>
+              <button class="action-row" @click="router.push('/inventario/crear')">
+                <Icon name="mdi:plus-box" class="act-icon bg-green" />
+                <span>Agregar Elemento</span>
+              </button>
+              <button class="action-row" @click="router.push('/admin/ambientes')">
+                <Icon name="mdi:office-building" class="act-icon bg-purple" />
+                <span>Gestión de Ambientes</span>
+              </button>
+              <button class="action-row" @click="router.push('/reportes')">
+                <Icon name="mdi:file-chart" class="act-icon bg-orange" />
+                <span>Generar Reportes</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- BOTÓN CERRAR SESIÓN -->
+          <button class="logout-full" @click="handleLogout">
+             <Icon name="mdi:logout" /> Cerrar Sesión
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 import { useAuth } from '~/composables/useAuth';
-import { useApi } from '~/composables/useApi';
 import { useRouter } from 'vue-router';
+import { ref, reactive, computed, onMounted, watch } from 'vue';
 
-definePageMeta({
-  layout: 'perfil-layout'
-});
+definePageMeta({ layout: 'perfil-layout' });
 
-const { logout } = useAuth();
+const { logout, user, getProfile } = useAuth();
 const router = useRouter();
-const activeTab = ref('profile');
+const config = useRuntimeConfig();
+const API = config.public.apiBaseUrl;
 
-// Obtener perfil
-const { data, pending, error } = useApi('/auth/profile', { 
-  credentials: 'include' 
+// ── Profile data ──────────────────────────────────────────────────────────────
+const { data: apiData, pending, error } = useApi('/auth/profile', { credentials: 'include' });
+const profileData = computed(() => apiData.value || user.value);
+
+// ── Avatar Logic ─────────────────────────────────────────────────────────────
+const fileInput = ref(null);
+const customPhoto = ref(null);
+const photoSuccess = ref(false);
+
+const ROLE_PHOTOS = {
+  'daniela': '/foto-dani.jpg',
+  'hoyos': '/foto-dani.jpg'
+};
+
+const storageKey = computed(() => {
+  const uid = profileData.value?.id || 'guest';
+  return `invigex_avatar_${uid}`;
 });
 
-// Estadísticas (placeholder - debes crear estos endpoints)
-const stats = ref({
-  elementosAsignados: 45,
-  novedadesRegistradas: 12,
-  ambientesGestionados: 8
-});
-
-// Tabs
-const tabs = [
-  { id: 'profile', label: 'Mi Perfil', icon: 'mdi:account-circle' },
-  { id: 'assignments', label: 'Asignaciones', icon: 'mdi:package-variant' },
-  { id: 'novedades', label: 'Novedades', icon: 'mdi:alert-circle' },
-  { id: 'ambientes', label: 'Ambientes', icon: 'mdi:office-building' }
-];
-
-// Funciones
-const handleLogout = async () => {
-  try {
-    await logout();
-    router.push('/login');
-  } catch (error) {
-    console.error('Error al cerrar sesión:', error);
-    router.push('/login');
+const loadSavedPhoto = () => {
+  if (process.client) {
+    const saved = localStorage.getItem(storageKey.value);
+    if (saved) customPhoto.value = saved;
   }
 };
 
-const handleViewAssignments = () => {
-  router.push('/inventario'); // O la ruta que prefieras
+const avatarSrc = computed(() => {
+  if (customPhoto.value) return customPhoto.value;
+  const nombre = (profileData.value?.nombre_completo || '').toLowerCase();
+  const matchedKey = Object.keys(ROLE_PHOTOS).find(k => nombre.includes(k));
+  return matchedKey ? ROLE_PHOTOS[matchedKey] : null;
+});
+
+const getInitials = (name) => {
+  if (!name) return 'U';
+  return name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
 };
 
-const handleViewNovedades = () => {
-  router.push('/novedades'); // O la ruta que prefieras
+const triggerFileInput = () => {
+  fileInput.value?.click();
 };
 
-const handleViewAmbientes = () => {
-  router.push('/ambientes'); // O la ruta que prefieras
-};
+const handlePhotoChange = (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  
+  if (file.size > 2 * 1024 * 1024) {
+    alert('La imagen es demasiado pesada (máx 2MB)');
+    return;
+  }
 
-const getAboutMeText = (rol) => {
-  const texts = {
-    'INSTRUCTOR': 'Instructor encargado de la gestión y asignación de elementos del inventario a los ambientes de formación. Responsable de mantener el control y seguimiento de los recursos educativos.',
-    'ADMIN': 'Administrador del sistema de inventario. Gestiono y superviso todos los recursos, ambientes y usuarios del sistema.',
-    'USUARIO': 'Usuario del sistema de inventario con permisos para consultar y reportar novedades sobre los elementos asignados.'
+  const reader = new FileReader();
+  reader.onload = () => {
+    customPhoto.value = reader.result;
+    if (process.client) {
+      localStorage.setItem(storageKey.value, reader.result);
+    }
+    photoSuccess.value = true;
+    setTimeout(() => { photoSuccess.value = false; }, 3000);
   };
-  return texts[rol] || texts['USUARIO'];
+  reader.readAsDataURL(file);
+};
+
+// ── Form Edición ─────────────────────────────────────────────────────────────
+const isEditing = ref(false);
+const saving = ref(false);
+const saveSuccess = ref(false);
+const saveError = ref('');
+
+const form = reactive({ nombre_completo: '', email: '', telefono: '' });
+const errors = reactive({ nombre_completo: '', email: '', telefono: '' });
+
+const startEdit = () => {
+  form.nombre_completo = profileData.value?.nombre_completo || '';
+  form.email = profileData.value?.email || '';
+  form.telefono = profileData.value?.telefono || '';
+  isEditing.value = true;
+};
+
+const cancelEdit = () => {
+  isEditing.value = false;
+  saveError.value = '';
+};
+
+const saveProfile = async () => {
+  saving.value = true;
+  saveError.value = '';
+  try {
+    await $fetch(`${API}/auth/profile`, {
+      method: 'PATCH',
+      credentials: 'include',
+      body: { ...form }
+    });
+    await getProfile();
+    isEditing.value = false;
+    saveSuccess.value = true;
+    setTimeout(() => { saveSuccess.value = false; }, 4000);
+  } catch (err) {
+    saveError.value = err?.data?.message || 'Error al actualizar';
+  } finally {
+    saving.value = false;
+  }
+};
+
+// ── Password ─────────────────────────────────────────────────────────────────
+const showPasswordSection = ref(false);
+const changingPassword = ref(false);
+const passwordSuccess = ref(false);
+const passwordForm = reactive({ new: '' });
+const passwordErrors = reactive({ new: '' });
+
+const togglePasswordSection = () => { showPasswordSection.value = !showPasswordSection.value; };
+
+const changePassword = async () => {
+  if (passwordForm.new.length < 8) {
+    passwordErrors.new = 'Mínimo 8 caracteres';
+    return;
+  }
+  changingPassword.value = true;
+  try {
+    await $fetch(`${API}/auth/profile`, {
+      method: 'PATCH',
+      credentials: 'include',
+      body: { password: passwordForm.new }
+    });
+    passwordSuccess.value = true;
+    setTimeout(() => { showPasswordSection.value = false; passwordSuccess.value = false; }, 3000);
+  } catch (err) {
+    alert('Error al cambiar contraseña');
+  } finally {
+    changingPassword.value = false;
+  }
+};
+
+// ── Stats & Lifecycle ───────────────────────────────────────────────────────
+const stats = ref({ elementosAsignados: 45, novedadesRegistradas: 8, ambientesGestionados: 3 });
+
+onMounted(async () => {
+  if (!user.value) await getProfile();
+  loadSavedPhoto();
+});
+
+watch(() => profileData.value?.id, (newId) => { if (newId) loadSavedPhoto(); });
+
+const handleLogout = async () => {
+  try { await logout(); } catch { router.push('/login'); }
 };
 
 const formatDate = (date) => {
-  if (!date) return 'No disponible';
-  return new Date(date).toLocaleDateString('es-CO', { 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
-  });
+  if (!date) return 'Sin fecha';
+  return new Date(date).toLocaleDateString('es-CO', { year: 'numeric', month: 'long', day: 'numeric' });
 };
 </script>
+
+<style scoped>
+.perfil-page {
+  --primary: #059669;
+  --bg: #f8fafc;
+  --card-bg: #ffffff;
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  min-height: 100vh;
+  background: var(--bg);
+  padding-bottom: 40px;
+}
+
+.perfil-loading { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 60vh; }
+.loading-spinner { width: 40px; height: 40px; border: 3px solid #e2e8f0; border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Banner */
+.profile-banner { position: relative; border-radius: 20px; overflow: hidden; margin-bottom: 30px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }
+.banner-bg { position: absolute; inset: 0; background: linear-gradient(135deg, #059669, #0d9488); }
+.banner-inner { position: relative; padding: 50px 40px; display: flex; align-items: center; gap: 30px; flex-wrap: wrap; }
+.banner-logo { position: absolute; top: 20px; right: 25px; display: flex; align-items: center; gap: 8px; color: white; font-weight: 800; opacity: 0.8; letter-spacing: 1px; }
+.logo-icon { font-size: 24px; }
+
+.avatar-wrapper { position: relative; }
+.avatar-img { width: 120px; height: 120px; border-radius: 50%; border: 4px solid white; object-fit: cover; box-shadow: 0 8px 16px rgba(0,0,0,0.15); }
+.avatar-placeholder { width: 120px; height: 120px; border-radius: 50%; background: #d1fae5; color: #059669; font-size: 40px; font-weight: 700; display: flex; align-items: center; justify-content: center; border: 4px solid white; }
+.avatar-edit-btn { position: absolute; bottom: 5px; right: 5px; background: white; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #059669; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+.hidden-input { display: none; }
+
+.banner-name { color: white; font-size: 32px; font-weight: 800; margin: 0; }
+.banner-email { color: #d1fae5; font-size: 16px; margin: 5px 0 15px; }
+.banner-badges { display: flex; gap: 10px; }
+.role-badge { background: rgba(255,255,255,0.2); color: white; padding: 4px 12px; border-radius: 50px; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+.status-badge { background: #d1fae5; color: #065f46; padding: 4px 12px; border-radius: 50px; font-size: 12px; font-weight: 700; }
+
+.btn-edit-header { background: white; color: #059669; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+.btn-edit-header:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+
+/* Main Grid */
+.main-grid { display: grid; grid-template-columns: 1fr 350px; gap: 25px; }
+@media (max-width: 1024px) { .main-grid { grid-template-columns: 1fr; } }
+
+.card { background: white; border-radius: 18px; padding: 25px; margin-bottom: 25px; border: 1px solid #eef2f6; }
+.card-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+.card-header h2 { font-size: 18px; font-weight: 700; margin: 0; flex: 1; }
+.card-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.card-icon--blue { background: #eff6ff; color: #3b82f6; }
+.card-icon--purple { background: #f5f3ff; color: #8b5cf6; }
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.form-group--full { grid-column: 1 / -1; }
+.form-group label { display: block; font-size: 12px; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase; }
+.form-input { width: 100%; padding: 12px 15px; border-radius: 10px; border: 1.5px solid #e2e8f0; font-size: 14px; background: #f8fafc; outline: none; transition: 0.2s; }
+.form-input--active { background: white; border-color: #059669; }
+.form-input--readonly { opacity: 0.7; }
+
+.btn-outline { background: transparent; border: 1.5px solid #e2e8f0; padding: 8px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.btn-save { background: #059669; color: white; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; }
+.btn-cancel { background: #f1f5f9; color: #64748b; border: none; padding: 10px 20px; border-radius: 10px; font-weight: 700; cursor: pointer; }
+
+/* Stats */
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+.stat-box { padding: 20px; border-radius: 18px; text-align: center; cursor: pointer; transition: 0.2s; }
+.stat-box:hover { transform: translateY(-5px); }
+.stat-box.blue { background: #eff6ff; color: #1d4ed8; }
+.stat-box.red { background: #fef2f2; color: #dc2626; }
+.stat-val { font-size: 28px; font-weight: 800; line-height: 1; }
+.stat-lab { font-size: 12px; font-weight: 600; margin-top: 5px; opacity: 0.8; }
+
+.vertical-actions { display: flex; flex-direction: column; gap: 10px; }
+.action-row { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 12px; border-radius: 12px; border: none; background: #f8fafc; cursor: pointer; transition: 0.2s; }
+.action-row:hover { background: #f1f5f9; padding-left: 15px; }
+.act-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; }
+.bg-blue { background: #3b82f6; }
+.bg-green { background: #10b981; }
+.bg-purple { background: #8b5cf6; }
+.bg-orange { background: #f59e0b; }
+
+.logout-full { width: 100%; padding: 15px; border-radius: 15px; background: #fee2e2; color: #dc2626; border: none; font-weight: 700; cursor: pointer; margin-top: 20px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.logout-full:hover { background: #fecaca; }
+
+.alert-success { background: #ecfdf5; color: #065f46; border: 1px solid #10b981; padding: 10px; border-radius: 10px; font-size: 13px; margin: 10px 0; }
+</style>
