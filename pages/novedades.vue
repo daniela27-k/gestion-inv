@@ -248,150 +248,183 @@
         @click.self="cerrarModal"
       >
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden">
+
+          <!-- Cabecera -->
           <div class="bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-5 flex justify-between items-center">
             <div class="flex items-center gap-3 text-white">
-              <Icon :name="modoModal === 'crear' ? 'mdi:plus-circle' : 'mdi:pencil'" class="w-6 h-6" />
-              <h2 class="text-lg font-bold">
-                {{ modoModal === 'crear' ? 'Registrar Novedad' : 'Editar Novedad' }}
-              </h2>
+              <div class="w-9 h-9 bg-white/20 rounded-xl flex items-center justify-center">
+                <Icon :name="modoModal === 'crear' ? 'mdi:plus-circle' : 'mdi:pencil'" class="w-5 h-5" />
+              </div>
+              <div>
+                <h2 class="text-lg font-bold leading-tight">
+                  {{ modoModal === 'crear' ? 'Registrar Novedad' : 'Editar Novedad' }}
+                </h2>
+                <p class="text-amber-100 text-xs">Completa los datos del incidente</p>
+              </div>
             </div>
-            <button @click="cerrarModal" class="text-white/80 hover:text-white">
-              <Icon name="mdi:close" class="w-6 h-6" />
+            <button @click="cerrarModal" class="w-8 h-8 flex items-center justify-center rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-all">
+              <Icon name="mdi:close" class="w-5 h-5" />
             </button>
           </div>
 
-          <form @submit.prevent="guardarNovedad" class="p-6 space-y-4">
+          <form @submit.prevent="guardarNovedad" class="p-6 space-y-5">
 
-            <!-- Tipo -->
-            <div>
-              <label class="block text-xs font-bold text-gray-700 mb-1">Tipo de incidente *</label>
-              <select
-                id="select-tipo-novedad"
-                v-model="form.tipo_novedad"
-                required
-                class="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-              >
-                <option value="">-- Seleccionar tipo --</option>
-                <option value="daño">Daño</option>
-                <option value="perdida">Pérdida</option>
-                <option value="mantenimiento">Mantenimiento requerido</option>
-                <option value="robo">Robo</option>
-                <option value="otro">Otro</option>
-              </select>
+            <!-- ── Sección: Tipo ── -->
+            <div class="space-y-3">
+              <div class="flex items-center gap-2 text-xs font-bold text-amber-700 uppercase tracking-widest">
+                <Icon name="mdi:alert-circle" class="w-4 h-4" />
+                <span>Tipo de incidente</span>
+                <div class="flex-1 h-px bg-amber-100"></div>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1.5">Clasificación *</label>
+                <select
+                  id="select-tipo-novedad"
+                  v-model="form.tipo_novedad"
+                  required
+                  class="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-white"
+                >
+                  <option value="">— Seleccionar tipo —</option>
+                  <option value="daño">🔴 Daño</option>
+                  <option value="perdida">🟣 Pérdida</option>
+                  <option value="mantenimiento">🟡 Mantenimiento requerido</option>
+                  <option value="robo">⚫ Robo</option>
+                  <option value="otro">⚪ Otro</option>
+                </select>
+              </div>
             </div>
 
-            <!-- Elemento afectado -->
-            <div>
-              <label class="block text-xs font-bold text-gray-700 mb-1">Elemento afectado *</label>
-              <div class="relative">
+            <!-- ── Sección: Elemento afectado ── -->
+            <div class="space-y-3">
+              <div class="flex items-center gap-2 text-xs font-bold text-amber-700 uppercase tracking-widest">
+                <Icon name="mdi:laptop" class="w-4 h-4" />
+                <span>Elemento afectado</span>
+                <div class="flex-1 h-px bg-amber-100"></div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1.5">Elemento del inventario *</label>
+                <select
+                  id="select-elemento-novedad"
+                  v-model="form.id_inventario"
+                  required
+                  class="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-white"
+                >
+                  <option :value="0">— Seleccionar elemento —</option>
+                  <option
+                    v-for="el in elementosActivos"
+                    :key="el.id_inventario"
+                    :value="el.id_inventario"
+                  >
+                    {{ el.marca }} {{ el.modelo }} · S/N: {{ el.numero_serial }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- Tarjeta preview -->
+              <Transition name="slide-fade">
+                <div v-if="form.id_inventario && elementoNovedadInfo"
+                  class="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3">
+                  <div class="w-9 h-9 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Icon name="mdi:laptop" class="w-5 h-5 text-amber-600" />
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm font-bold text-amber-900 truncate">{{ elementoNovedadInfo.nombre }}</p>
+                    <p class="text-xs text-amber-600">{{ elementoNovedadInfo.marca }} {{ elementoNovedadInfo.modelo }}</p>
+                  </div>
+                  <span class="text-xs bg-amber-200 text-amber-800 font-mono px-2 py-1 rounded-lg whitespace-nowrap">S/N: {{ elementoNovedadInfo.numero_serial }}</span>
+                </div>
+              </Transition>
+            </div>
+
+            <!-- ── Sección: Descripción y fecha ── -->
+            <div class="space-y-3">
+              <div class="flex items-center gap-2 text-xs font-bold text-amber-700 uppercase tracking-widest">
+                <Icon name="mdi:text-box" class="w-4 h-4" />
+                <span>Detalle del incidente</span>
+                <div class="flex-1 h-px bg-amber-100"></div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1.5">Descripción *</label>
+                <textarea
+                  id="textarea-descripcion-novedad"
+                  v-model="form.descripcion"
+                  required
+                  rows="3"
+                  maxlength="2000"
+                  placeholder="Describe detalladamente el incidente..."
+                  class="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent resize-none"
+                ></textarea>
+                <p class="text-xs text-gray-400 text-right mt-1">{{ form.descripcion.length }}/2000</p>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1.5">Fecha del incidente</label>
                 <input
-                  id="input-buscar-inventario"
-                  v-model="terminoBusquedaInventario"
-                  @input="filtrarInventarios"
-                  type="text"
-                  placeholder="Buscar elemento por nombre o serial..."
+                  id="input-fecha-novedad"
+                  v-model="form.fecha_novedad"
+                  type="date"
+                  :max="hoy"
                   class="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                 />
-                <!-- Dropdown resultados -->
-                <div
-                  v-if="inventariosFiltrados.length > 0 && !form.id_inventario"
-                  class="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-48 overflow-y-auto"
+              </div>
+            </div>
+
+            <!-- ── Solo Admin en modo editar ── -->
+            <div v-if="esAdmin && modoModal === 'editar'" class="space-y-3">
+              <div class="flex items-center gap-2 text-xs font-bold text-blue-700 uppercase tracking-widest">
+                <Icon name="mdi:shield-check" class="w-4 h-4" />
+                <span>Gestión administrativa</span>
+                <div class="flex-1 h-px bg-blue-100"></div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1.5">Estado de la novedad</label>
+                <select
+                  id="select-estado-modal"
+                  v-model="form.estado_novedad"
+                  class="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-white"
                 >
-                  <button
-                    v-for="item in inventariosFiltrados"
-                    :key="item.id_inventario"
-                    type="button"
-                    @click="seleccionarInventario(item)"
-                    class="w-full text-left px-4 py-2.5 hover:bg-amber-50 text-sm border-b border-gray-100 last:border-0"
-                  >
-                    <p class="font-semibold text-gray-900">{{ item.nombre }}</p>
-                    <p class="text-xs text-gray-500">S/N: {{ item.numero_serial }}</p>
-                  </button>
-                </div>
+                  <option value="pendiente">🟡 Pendiente</option>
+                  <option value="en_revision">🔵 En Revisión</option>
+                  <option value="resuelta">✅ Resuelta</option>
+                  <option value="cerrada">⚫ Cerrada</option>
+                </select>
               </div>
-              <!-- Elemento seleccionado -->
-              <div v-if="inventarioSeleccionado" class="mt-2 flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2">
-                <Icon name="mdi:check-circle" class="w-4 h-4 text-amber-600" />
-                <span class="text-sm font-semibold text-amber-800">{{ inventarioSeleccionado.nombre }}</span>
-                <button type="button" @click="limpiarInventario" class="ml-auto text-amber-500 hover:text-amber-700">
-                  <Icon name="mdi:close" class="w-4 h-4" />
-                </button>
+
+              <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1.5">Observaciones del administrador</label>
+                <textarea
+                  id="textarea-obs-admin"
+                  v-model="form.observaciones_admin"
+                  rows="3"
+                  maxlength="2000"
+                  placeholder="Observaciones, resolución o comentarios adicionales..."
+                  class="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent resize-none"
+                ></textarea>
               </div>
-            </div>
-
-            <!-- Descripción -->
-            <div>
-              <label class="block text-xs font-bold text-gray-700 mb-1">Descripción del incidente *</label>
-              <textarea
-                id="textarea-descripcion-novedad"
-                v-model="form.descripcion"
-                required
-                rows="4"
-                maxlength="2000"
-                placeholder="Describe detalladamente el incidente, daño o situación..."
-                class="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent resize-none"
-              ></textarea>
-              <p class="text-xs text-gray-400 text-right">{{ form.descripcion.length }}/2000</p>
-            </div>
-
-            <!-- Fecha -->
-            <div>
-              <label class="block text-xs font-bold text-gray-700 mb-1">Fecha del incidente</label>
-              <input
-                id="input-fecha-novedad"
-                v-model="form.fecha_novedad"
-                type="date"
-                :max="hoy"
-                class="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-              />
-            </div>
-
-            <!-- Observaciones admin (solo si admin y modo editar) -->
-            <div v-if="esAdmin && modoModal === 'editar'">
-              <label class="block text-xs font-bold text-gray-700 mb-1">Observaciones del administrador</label>
-              <textarea
-                id="textarea-obs-admin"
-                v-model="form.observaciones_admin"
-                rows="3"
-                maxlength="2000"
-                placeholder="Observaciones, resolución o comentarios adicionales..."
-                class="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent resize-none"
-              ></textarea>
-            </div>
-
-            <!-- Estado (solo admin y modo editar) -->
-            <div v-if="esAdmin && modoModal === 'editar'">
-              <label class="block text-xs font-bold text-gray-700 mb-1">Estado de la novedad</label>
-              <select
-                id="select-estado-modal"
-                v-model="form.estado_novedad"
-                class="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-              >
-                <option value="pendiente">Pendiente</option>
-                <option value="en_revision">En Revisión</option>
-                <option value="resuelta">Resuelta</option>
-                <option value="cerrada">Cerrada</option>
-              </select>
             </div>
 
             <!-- Error -->
-            <p v-if="errorModal" class="text-red-600 text-sm flex items-center gap-1">
-              <Icon name="mdi:alert-circle" class="w-4 h-4" />{{ errorModal }}
-            </p>
+            <div v-if="errorModal" class="flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-red-700">
+              <Icon name="mdi:alert-circle" class="w-4 h-4 flex-shrink-0" />
+              <span class="text-sm">{{ errorModal }}</span>
+            </div>
 
-            <div class="flex justify-end gap-3 pt-2">
+            <!-- Botones -->
+            <div class="flex gap-3 pt-1">
               <button type="button" @click="cerrarModal"
-                class="px-5 py-2.5 rounded-xl border-2 border-gray-200 text-gray-700 hover:bg-gray-50 font-semibold text-sm">
-                Cancelar
-              </button>
+                class="flex-1 py-2.5 rounded-xl border-2 border-gray-200 text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-all"
+              >Cancelar</button>
               <button
                 id="btn-guardar-novedad"
                 type="submit"
                 :disabled="guardando || (!form.id_inventario && modoModal === 'crear')"
-                class="px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 disabled:opacity-50 text-white font-semibold text-sm shadow-md transition-all active:scale-95 flex items-center gap-2"
+                class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 disabled:opacity-50 text-white font-semibold text-sm shadow-md transition-all active:scale-95 flex items-center justify-center gap-2"
               >
                 <Icon :name="guardando ? 'mdi:loading' : 'mdi:content-save'" class="w-4 h-4" :class="{ 'animate-spin': guardando }" />
-                {{ guardando ? 'Guardando...' : 'Guardar' }}
+                {{ guardando ? 'Guardando...' : 'Guardar novedad' }}
               </button>
             </div>
           </form>
@@ -486,10 +519,15 @@ const guardando = ref(false)
 const errorModal = ref('')
 const hoy: string = new Date().toISOString().split('T')[0] ?? ''
 
-// Búsqueda de inventario en el formulario
-const terminoBusquedaInventario = ref('')
-const inventarioSeleccionado = ref<any>(null)
-const inventariosFiltrados = ref<any[]>([])
+// Computed: inventarios activos para el select
+const elementosActivos = computed(() =>
+  (inventarios.value as any[]).filter((i: any) => !i.fecha_baja)
+)
+
+// Preview del elemento seleccionado en el modal
+const elementoNovedadInfo = computed(() =>
+  (inventarios.value as any[]).find((i: any) => i.id_inventario === Number(form.id_inventario)) ?? null
+)
 
 // Modal crear/editar
 const modalVisible = ref(false)
@@ -565,35 +603,7 @@ onMounted(async () => {
   await cargar()
 })
 
-// ── Buscador de inventario ───────────────────────────
-const filtrarInventarios = () => {
-  if (!terminoBusquedaInventario.value.trim()) {
-    inventariosFiltrados.value = []
-    return
-  }
-  const term = terminoBusquedaInventario.value.toLowerCase()
-  inventariosFiltrados.value = inventarios.value
-    .filter((i: any) => !i.fecha_baja) // solo activos
-    .filter((i: any) =>
-      i.nombre?.toLowerCase().includes(term) ||
-      i.numero_serial?.toLowerCase().includes(term)
-    )
-    .slice(0, 8)
-}
-
-const seleccionarInventario = (item: any) => {
-  inventarioSeleccionado.value = item
-  form.id_inventario = item.id_inventario
-  terminoBusquedaInventario.value = item.nombre
-  inventariosFiltrados.value = []
-}
-
-const limpiarInventario = () => {
-  inventarioSeleccionado.value = null
-  form.id_inventario = 0
-  terminoBusquedaInventario.value = ''
-  inventariosFiltrados.value = []
-}
+// (busqueda de inventario eliminada — ahora se usa select)
 
 // ── Modales ──────────────────────────────────────────
 const resetForm = () => {
@@ -603,7 +613,6 @@ const resetForm = () => {
   form.id_inventario = 0
   form.estado_novedad = 'pendiente'
   form.observaciones_admin = ''
-  limpiarInventario()
 }
 
 const abrirModalCrear = () => {
@@ -624,9 +633,6 @@ const abrirModalEditar = (n: NovedadData) => {
   form.id_inventario = n.id_inventario
   form.estado_novedad = n.estado_novedad
   form.observaciones_admin = n.observaciones_admin || ''
-  // Mostrar el nombre en el buscador
-  terminoBusquedaInventario.value = n.inventario?.nombre || `ID: ${n.id_inventario}`
-  inventarioSeleccionado.value = n.inventario || null
   modalVisible.value = true
 }
 

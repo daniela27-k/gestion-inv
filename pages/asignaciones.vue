@@ -200,84 +200,152 @@
         class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
         @click.self="cerrarModal">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden">
+
+          <!-- Cabecera del modal -->
           <div class="bg-gradient-to-r from-emerald-600 to-emerald-700 px-6 py-5 flex justify-between items-center">
             <div class="flex items-center gap-3 text-white">
-              <Icon :name="modoModal === 'crear' ? 'mdi:plus-circle' : 'mdi:pencil'" class="w-6 h-6" />
-              <h2 class="text-lg font-bold">{{ modoModal === 'crear' ? 'Nueva Asignación' : 'Editar Asignación' }}</h2>
+              <div class="w-9 h-9 bg-white/20 rounded-xl flex items-center justify-center">
+                <Icon :name="modoModal === 'crear' ? 'mdi:plus-circle' : 'mdi:pencil'" class="w-5 h-5" />
+              </div>
+              <div>
+                <h2 class="text-lg font-bold leading-tight">{{ modoModal === 'crear' ? 'Nueva Asignación' : 'Editar Asignación' }}</h2>
+                <p class="text-emerald-100 text-xs">Completa los datos requeridos</p>
+              </div>
             </div>
-            <button @click="cerrarModal" class="text-white/80 hover:text-white">
-              <Icon name="mdi:close" class="w-6 h-6" />
+            <button @click="cerrarModal" class="w-8 h-8 flex items-center justify-center rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition-all">
+              <Icon name="mdi:close" class="w-5 h-5" />
             </button>
           </div>
 
-          <form @submit.prevent="guardarAsignacion" class="p-6 space-y-4">
+          <form @submit.prevent="guardarAsignacion" class="p-6 space-y-5">
 
-            <!-- Nombre del elemento -->
-            <div>
-              <label class="block text-xs font-bold text-gray-700 mb-1">Nombre del elemento *</label>
-              <input id="input-nombre-elemento" v-model="form.nombreElemento" type="text" required
-                placeholder="Ej: Laptop Dell Inspiron 15"
-                class="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent" />
-            </div>
-
-            <!-- Instructor asignado -->
-            <div>
-              <label class="block text-xs font-bold text-gray-700 mb-1">Instructor asignado *</label>
-              <select id="select-instructor" v-model="form.id_instructor" required
-                class="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
-                <option value="">-- Seleccionar instructor --</option>
-                <option v-for="u in instructores" :key="u.id" :value="u.id">
-                  {{ u.nombre_completo }} ({{ u.email }})
-                </option>
-              </select>
-            </div>
-
-            <div class="grid grid-cols-2 gap-4">
-              <!-- Fecha asignación -->
-              <div>
-                <label class="block text-xs font-bold text-gray-700 mb-1">Fecha asignación *</label>
-                <input id="input-fecha-asig" v-model="form.fecha_asignacion" type="date" required
-                  class="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent" />
+            <!-- ── Sección: Equipo ── -->
+            <div class="space-y-3">
+              <div class="flex items-center gap-2 text-xs font-bold text-emerald-700 uppercase tracking-widest">
+                <Icon name="mdi:laptop" class="w-4 h-4" />
+                <span>Equipo a asignar</span>
+                <div class="flex-1 h-px bg-emerald-100"></div>
               </div>
-              <!-- Fecha devolución estimada -->
+
+              <!-- Select elemento -->
               <div>
-                <label class="block text-xs font-bold text-gray-700 mb-1">F. Dev. Estimada *</label>
-                <input id="input-fecha-dev" v-model="form.fecha_devolucion_estimada" type="date" required
-                  class="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent" />
+                <label class="block text-xs font-semibold text-gray-600 mb-1.5">Elemento del inventario *</label>
+                <select id="select-elemento-inventario" v-model="form.id_inventario_seleccionado" required
+                  @change="onSeleccionarElemento"
+                  :disabled="cargandoElementos"
+                  class="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white">
+                  <option value="">{{ cargandoElementos ? 'Cargando elementos...' : '— Seleccionar elemento —' }}</option>
+                  <option v-for="el in elementosInventario" :key="el.id_inventario" :value="el.id_inventario">
+                    {{ el.marca }} {{ el.modelo }} · S/N: {{ el.numero_serial }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- Tarjeta preview del elemento seleccionado -->
+              <Transition name="slide-fade">
+                <div v-if="form.id_inventario_seleccionado && elementoSeleccionadoInfo"
+                  class="flex items-center gap-3 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3">
+                  <div class="w-9 h-9 bg-emerald-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <Icon name="mdi:laptop" class="w-5 h-5 text-emerald-600" />
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm font-bold text-emerald-900 truncate">{{ elementoSeleccionadoInfo.nombre }}</p>
+                    <p class="text-xs text-emerald-600">{{ elementoSeleccionadoInfo.marca }} {{ elementoSeleccionadoInfo.modelo }}</p>
+                  </div>
+                  <span class="text-xs bg-emerald-200 text-emerald-800 font-mono px-2 py-1 rounded-lg whitespace-nowrap">S/N: {{ elementoSeleccionadoInfo.numero_serial }}</span>
+                </div>
+              </Transition>
+            </div>
+
+            <!-- ── Sección: Instructor ── -->
+            <div class="space-y-3">
+              <div class="flex items-center gap-2 text-xs font-bold text-emerald-700 uppercase tracking-widest">
+                <Icon name="mdi:account-tie" class="w-4 h-4" />
+                <span>Instructor responsable</span>
+                <div class="flex-1 h-px bg-emerald-100"></div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1.5">Instructor asignado *</label>
+                <select id="select-instructor" v-model="form.id_instructor" required
+                  class="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white">
+                  <option value="">— Seleccionar instructor —</option>
+                  <option v-for="u in instructores" :key="u.id" :value="u.id">
+                    {{ u.nombre_completo }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- Preview instructor -->
+              <Transition name="slide-fade">
+                <div v-if="form.id_instructor && instructorSeleccionadoInfo"
+                  class="flex items-center gap-3 bg-blue-50 border border-blue-200 rounded-xl px-4 py-3">
+                  <div class="w-9 h-9 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span class="text-white font-bold text-sm">{{ instructorSeleccionadoInfo.nombre_completo?.charAt(0)?.toUpperCase() }}</span>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm font-bold text-blue-900 truncate">{{ instructorSeleccionadoInfo.nombre_completo }}</p>
+                    <p class="text-xs text-blue-500">{{ instructorSeleccionadoInfo.email }}</p>
+                  </div>
+                </div>
+              </Transition>
+            </div>
+
+            <!-- ── Sección: Fechas y Estado ── -->
+            <div class="space-y-3">
+              <div class="flex items-center gap-2 text-xs font-bold text-emerald-700 uppercase tracking-widest">
+                <Icon name="mdi:calendar-range" class="w-4 h-4" />
+                <span>Período de asignación</span>
+                <div class="flex-1 h-px bg-emerald-100"></div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-semibold text-gray-600 mb-1.5">Fecha de asignación *</label>
+                  <input id="input-fecha-asig" v-model="form.fecha_asignacion" type="date" required
+                    class="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-600 mb-1.5">Dev. estimada *</label>
+                  <input id="input-fecha-dev" v-model="form.fecha_devolucion_estimada" type="date" required
+                    class="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent" />
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1.5">Estado de la asignación</label>
+                <select id="select-estado-asig" v-model="form.estado_asignacion"
+                  class="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white">
+                  <option value="activa">✅ Activa</option>
+                  <option value="devuelta">🔵 Devuelta</option>
+                  <option value="perdida">🟣 Perdida</option>
+                  <option value="dañada">🔴 Dañada</option>
+                </select>
               </div>
             </div>
 
-            <!-- Estado -->
+            <!-- ── Notas ── -->
             <div>
-              <label class="block text-xs font-bold text-gray-700 mb-1">Estado</label>
-              <select id="select-estado-asig" v-model="form.estado_asignacion"
-                class="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
-                <option value="activa">Activa</option>
-                <option value="devuelta">Devuelta</option>
-                <option value="perdida">Perdida</option>
-                <option value="dañada">Dañada</option>
-              </select>
-            </div>
-
-            <!-- Notas -->
-            <div>
-              <label class="block text-xs font-bold text-gray-700 mb-1">Notas u observaciones</label>
-              <textarea id="textarea-notas-asig" v-model="form.notas" rows="3"
+              <label class="block text-xs font-semibold text-gray-600 mb-1.5">Notas u observaciones</label>
+              <textarea id="textarea-notas-asig" v-model="form.notas" rows="2"
                 placeholder="Observaciones opcionales..."
                 class="w-full border-2 border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none"></textarea>
             </div>
 
-            <p v-if="errorModal" class="text-red-600 text-sm flex items-center gap-1">
-              <Icon name="mdi:alert-circle" class="w-4 h-4" />{{ errorModal }}
-            </p>
+            <!-- Error -->
+            <div v-if="errorModal" class="flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-red-700">
+              <Icon name="mdi:alert-circle" class="w-4 h-4 flex-shrink-0" />
+              <span class="text-sm">{{ errorModal }}</span>
+            </div>
 
-            <div class="flex justify-end gap-3 pt-2">
+            <!-- Botones -->
+            <div class="flex gap-3 pt-1">
               <button type="button" @click="cerrarModal"
-                class="px-5 py-2.5 rounded-xl border-2 border-gray-200 text-gray-700 hover:bg-gray-50 font-semibold text-sm">Cancelar</button>
+                class="flex-1 py-2.5 rounded-xl border-2 border-gray-200 text-gray-600 hover:bg-gray-50 font-semibold text-sm transition-all">Cancelar</button>
               <button id="btn-guardar-asig" type="submit" :disabled="guardando"
-                class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm shadow-md transition-all active:scale-95 flex items-center gap-2">
+                class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold text-sm shadow-md transition-all active:scale-95 flex items-center justify-center gap-2">
                 <Icon :name="guardando ? 'mdi:loading' : 'mdi:content-save'" class="w-4 h-4" :class="{ 'animate-spin': guardando }" />
-                {{ guardando ? 'Guardando...' : 'Guardar' }}
+                {{ guardando ? 'Guardando...' : 'Guardar asignación' }}
               </button>
             </div>
           </form>
@@ -325,12 +393,30 @@ import { ref, computed, onMounted, reactive } from 'vue'
 import { useAsignacion, type AsignacionData, type EstadoAsignacion, type CreateAsignacionPayload } from '~/composables/useAsignacion'
 import { useUsuario } from '~/composables/useUsuario'
 import { useAuth } from '~/composables/useAuth'
+import { useInventario } from '~/composables/useInventario'
 
 definePageMeta({ layout: 'perfil-layout' })
 
 const { user } = useAuth()
 const { asignaciones, loading, fetchAsignaciones, createAsignacion, updateAsignacion, devolverAsignacion, deleteAsignacion } = useAsignacion()
 const { instructores, fetchInstructores } = useUsuario()
+const { inventarios: elementosInventarioRaw, fetchInventarios } = useInventario()
+
+// Elementos del inventario activos (sin fecha_baja) para el select
+const elementosInventario = computed(() =>
+  (elementosInventarioRaw.value as any[]).filter((el: any) => !el.fecha_baja)
+)
+const cargandoElementos = ref(false)
+
+// Preview del elemento seleccionado en el modal
+const elementoSeleccionadoInfo = computed(() =>
+  (elementosInventarioRaw.value as any[]).find((el: any) => el.id_inventario === Number(form.id_inventario_seleccionado)) ?? null
+)
+
+// Preview del instructor seleccionado en el modal
+const instructorSeleccionadoInfo = computed(() =>
+  (instructores.value as any[]).find((u: any) => u.id === Number(form.id_instructor)) ?? null
+)
 
 const hoy: string = new Date().toISOString().split('T')[0] ?? ''
 
@@ -355,6 +441,7 @@ const modoModal = ref<'crear' | 'editar'>('crear')
 const asignacionEditando = ref<AsignacionData | null>(null)
 
 const form = reactive({
+  id_inventario_seleccionado: '' as string | number,
   nombreElemento: '',
   id_instructor: 0,
   fecha_asignacion: hoy,
@@ -362,6 +449,12 @@ const form = reactive({
   estado_asignacion: 'activa' as EstadoAsignacion,
   notas: '',
 })
+
+// Cuando se selecciona un elemento, actualizar el nombreElemento
+const onSeleccionarElemento = () => {
+  const el = (elementosInventarioRaw.value as any[]).find((e: any) => e.id_inventario === Number(form.id_inventario_seleccionado))
+  form.nombreElemento = el ? el.nombre : ''
+}
 
 const modalDevolucion = reactive({
   visible: false,
@@ -417,15 +510,18 @@ const mostrarMensaje = (texto: string, tipo: 'success' | 'error') => {
 // ── Carga ────────────────────────────────────────────
 const cargar = async () => {
   try {
-    // Siempre cargamos instructores (endpoint accesible para todos los autenticados)
-    await Promise.all([fetchAsignaciones(), fetchInstructores()])
+    cargandoElementos.value = true
+    await Promise.all([fetchAsignaciones(), fetchInstructores(), fetchInventarios()])
   } catch (e: any) {
     mostrarMensaje(e?.data?.message || 'Error al cargar datos', 'error')
+  } finally {
+    cargandoElementos.value = false
   }
 }
 
 // ── Modales ──────────────────────────────────────────
 const resetForm = () => {
+  form.id_inventario_seleccionado = ''
   form.nombreElemento = ''
   form.id_instructor = 0
   form.fecha_asignacion = hoy
@@ -446,6 +542,9 @@ const abrirModalEditar = (a: AsignacionData) => {
   modoModal.value = 'editar'
   asignacionEditando.value = a
   errorModal.value = ''
+  // Buscar el elemento en el inventario por nombre para preseleccionar
+  const elEncontrado = (elementosInventarioRaw.value as any[]).find((e: any) => e.nombre === a.nombreElemento)
+  form.id_inventario_seleccionado = elEncontrado ? elEncontrado.id_inventario : ''
   form.nombreElemento = a.nombreElemento
   form.id_instructor = a.id_instructor
   form.fecha_asignacion = a.fecha_asignacion?.split('T')[0] || hoy
@@ -461,6 +560,7 @@ const cerrarModal = () => {
 }
 
 const guardarAsignacion = async () => {
+  if (!form.id_inventario_seleccionado) { errorModal.value = 'Selecciona un elemento del inventario'; return }
   if (!form.id_instructor) { errorModal.value = 'Selecciona un instructor'; return }
   guardando.value = true
   errorModal.value = ''

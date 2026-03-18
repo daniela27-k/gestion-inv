@@ -1,15 +1,15 @@
-<!-- pages/inventario/crear.vue -->
+<!-- pages/inventario/[id].vue -->
 <template>
   <div class="max-w-4xl mx-auto space-y-6">
     <!-- Header -->
     <div class="bg-white rounded-2xl shadow-lg p-6">
       <div class="flex items-center gap-3">
         <div class="p-3 bg-emerald-100 rounded-xl">
-          <Icon name="mdi:plus-circle" class="w-8 h-8 text-emerald-600" />
+          <Icon name="mdi:pencil" class="w-8 h-8 text-emerald-600" />
         </div>
         <div>
-          <h1 class="text-3xl font-bold text-gray-900">Registrar Nuevo Elemento</h1>
-          <p class="text-gray-600">Completa los datos del elemento a registrar</p>
+          <h1 class="text-3xl font-bold text-gray-900">Editar Elemento</h1>
+          <p class="text-gray-600">Modifica los datos del elemento</p>
         </div>
       </div>
     </div>
@@ -29,8 +29,13 @@
       </button>
     </div>
 
+    <!-- Cargando -->
+    <div v-if="cargandoDatos" class="bg-white rounded-2xl shadow-lg p-12 flex justify-center">
+      <Icon name="mdi:loading" class="w-10 h-10 text-emerald-600 animate-spin" />
+    </div>
+
     <!-- Formulario -->
-    <form @submit.prevent="registrarElemento" class="bg-white rounded-2xl shadow-lg p-8 space-y-6">
+    <form v-else @submit.prevent="guardarCambios" class="bg-white rounded-2xl shadow-lg p-8 space-y-6">
       
       <!-- Información Básica -->
       <div>
@@ -40,40 +45,22 @@
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-          <!-- Número Serial -->
           <div>
             <label class="block text-sm font-semibold text-gray-700 mb-2">Número Serial *</label>
-            <select v-model="formulario.numero_serial" required :disabled="cargandoDatos"
-              @change="onSerialChange"
-              class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
-              <option value="">{{ cargandoDatos ? 'Cargando...' : '-- Seleccionar serial --' }}</option>
-              <option v-for="item in listaInventarioExistente" :key="item.id_inventario" :value="item.numero_serial">
-                {{ item.numero_serial }}
-              </option>
-            </select>
+            <input v-model="formulario.numero_serial" type="text" required maxlength="255"
+              class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent" />
           </div>
 
-          <!-- Marca -->
           <div>
             <label class="block text-sm font-semibold text-gray-700 mb-2">Marca *</label>
-            <select v-model="formulario.marca" required :disabled="cargandoDatos"
-              @change="onMarcaChange"
-              class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
-              <option value="">{{ cargandoDatos ? 'Cargando...' : '-- Seleccionar marca --' }}</option>
-              <option v-for="m in listaMarcas" :key="m" :value="m">{{ m }}</option>
-            </select>
+            <input v-model="formulario.marca" type="text" required maxlength="255"
+              class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent" />
           </div>
 
-          <!-- Modelo -->
           <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Modelo *</label>
-            <select v-model="formulario.modelo" required :disabled="cargandoDatos || !formulario.marca"
-              class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
-              <option value="">
-                {{ !formulario.marca ? 'Selecciona primero la marca' : cargandoDatos ? 'Cargando...' : '-- Seleccionar modelo --' }}
-              </option>
-              <option v-for="m in listaModelosFiltrados" :key="m" :value="m">{{ m }}</option>
-            </select>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Modelo</label>
+            <input v-model="formulario.modelo" type="text" maxlength="255"
+              class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent" />
           </div>
         </div>
       </div>
@@ -96,10 +83,9 @@
           
           <div>
             <label class="block text-sm font-semibold text-gray-700 mb-2">Tipo de Elemento *</label>
-            <select v-model="formulario.id_tipo_elemento" required :disabled="cargandoDatos"
-              @change="onTipoElementoChange"
+            <select v-model="formulario.id_tipo_elemento" required
               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
-              <option value="">{{ cargandoDatos ? 'Cargando...' : 'Seleccionar...' }}</option>
+              <option value="">Seleccionar...</option>
               <option v-for="tipo in listaTipos" :key="tipo.id_tipo_elemento" :value="tipo.id_tipo_elemento">
                 {{ tipo.nombre_tipo }}
               </option>
@@ -107,10 +93,10 @@
           </div>
 
           <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Estado Inicial *</label>
-            <select v-model="formulario.id_estado_elemento" required :disabled="cargandoDatos"
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Estado *</label>
+            <select v-model="formulario.id_estado_elemento" required
               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
-              <option value="">{{ cargandoDatos ? 'Cargando...' : 'Seleccionar...' }}</option>
+              <option value="">Seleccionar...</option>
               <option v-for="estado in listaEstados" :key="estado.id_estado_elemento" :value="estado.id_estado_elemento">
                 {{ estado.nombre_estado }}
               </option>
@@ -118,10 +104,10 @@
           </div>
 
           <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Ambiente Inicial *</label>
-            <select v-model="formulario.id_ambiente" required :disabled="cargandoDatos"
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Ambiente *</label>
+            <select v-model="formulario.id_ambiente" required
               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
-              <option value="">{{ cargandoDatos ? 'Cargando...' : 'Seleccionar...' }}</option>
+              <option value="">Seleccionar...</option>
               <option v-for="ambiente in listaAmbientes" :key="ambiente.id_ambiente" :value="ambiente.id_ambiente">
                 {{ ambiente.nombre_ambiente }}
               </option>
@@ -157,12 +143,7 @@
         <button type="submit" :disabled="guardando"
           class="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white font-bold rounded-xl hover:from-emerald-700 hover:to-emerald-800 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg">
           <Icon :name="guardando ? 'mdi:loading' : 'mdi:content-save'" class="w-5 h-5" :class="{'animate-spin': guardando}" />
-          {{ guardando ? 'Guardando...' : 'Registrar Elemento' }}
-        </button>
-
-        <button type="button" @click="limpiarFormulario" :disabled="guardando"
-          class="px-6 py-4 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 disabled:opacity-50">
-          Limpiar
+          {{ guardando ? 'Guardando...' : 'Guardar Cambios' }}
         </button>
 
         <NuxtLink to="/inventario/consultar"
@@ -176,12 +157,15 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
 definePageMeta({
   layout: 'perfil-layout'
 })
 
+const route = useRoute()
+const router = useRouter()
 const config = useRuntimeConfig()
 const baseURL = config.public.apiBaseUrl || 'http://localhost:3001'
 
@@ -192,23 +176,6 @@ const mensaje = ref({ texto: '', tipo: '' })
 const listaTipos = ref([])
 const listaEstados = ref([])
 const listaAmbientes = ref([])
-const listaInventarioExistente = ref([])
-const idInventarioSeleccionado = ref(null)
-
-const listaMarcas = computed(() => {
-  const marcasInventario = listaInventarioExistente.value.map(i => i.marca).filter(Boolean)
-  const marcasTipos = listaTipos.value.map(t => t.marca).filter(Boolean)
-  return [...new Set([...marcasInventario, ...marcasTipos])].sort()
-})
-
-const listaModelosFiltrados = computed(() => {
-  if (!formulario.value.marca) return []
-  const modelos = listaInventarioExistente.value
-    .filter(i => i.marca === formulario.value.marca)
-    .map(i => i.modelo)
-    .filter(Boolean)
-  return [...new Set(modelos)].sort()
-})
 
 const formulario = ref({
   nombre: '',
@@ -217,73 +184,51 @@ const formulario = ref({
   modelo: '',
   marca: '',
   ubicacion_actual: '',
-  fecha_registro: new Date().toISOString().split('T')[0],
+  fecha_registro: '',
   id_tipo_elemento: '',
   id_estado_elemento: '',
   id_ambiente: ''
 })
 
-const onSerialChange = () => {
-  const item = listaInventarioExistente.value.find(i => i.numero_serial === formulario.value.numero_serial)
-  if (item) {
-    idInventarioSeleccionado.value = item.id_inventario
-    formulario.value.marca = item.marca || ''
-    formulario.value.modelo = item.modelo || ''
-    formulario.value.id_tipo_elemento = item.id_tipo_elemento || ''
-    formulario.value.id_estado_elemento = item.id_estado_elemento || ''
-    onTipoElementoChange()
-  } else {
-    idInventarioSeleccionado.value = null
-  }
-}
-
-const onMarcaChange = () => {
-  formulario.value.modelo = ''
-}
-
-const onTipoElementoChange = () => {
-  const tipo = listaTipos.value.find(t => t.id_tipo_elemento === formulario.value.id_tipo_elemento)
-  formulario.value.nombre = tipo ? tipo.nombre_tipo : ''
-}
-
 const cargarDatos = async () => {
   cargandoDatos.value = true
   try {
-    const [tipos, estados, ambientes, inventario] = await Promise.all([
+    const [tipos, estados, ambientes, elemento] = await Promise.all([
       $fetch(`${baseURL}/tipo-elemento`, { credentials: 'include' }),
       $fetch(`${baseURL}/estado-elemento`, { credentials: 'include' }),
       $fetch(`${baseURL}/ambiente`, { credentials: 'include' }),
-      $fetch(`${baseURL}/inventario`, { credentials: 'include' }),
+      $fetch(`${baseURL}/inventario/${route.params.id}`, { credentials: 'include' }),
     ])
 
     listaTipos.value = tipos
     listaEstados.value = estados
     listaAmbientes.value = ambientes
-    listaInventarioExistente.value = inventario
+
+    formulario.value = {
+      nombre: elemento.nombre || '',
+      descripcion: elemento.descripcion || '',
+      numero_serial: elemento.numero_serial || '',
+      modelo: elemento.modelo || '',
+      marca: elemento.marca || '',
+      ubicacion_actual: elemento.ubicacion_actual || '',
+      fecha_registro: elemento.fecha_registro ? elemento.fecha_registro.split('T')[0] : '',
+      id_tipo_elemento: elemento.id_tipo_elemento || '',
+      id_estado_elemento: elemento.id_estado_elemento || '',
+      id_ambiente: elemento.id_ambiente || ''
+    }
   } catch (error) {
     console.error('❌ Error cargando datos:', error)
-    mensaje.value = { texto: 'Error al cargar los datos del formulario', tipo: 'error' }
+    mensaje.value = { texto: 'Error al cargar los datos del elemento', tipo: 'error' }
   } finally {
     cargandoDatos.value = false
   }
 }
 
-const registrarElemento = async () => {
+const guardarCambios = async () => {
   guardando.value = true
   mensaje.value = { texto: '', tipo: '' }
 
   try {
-    if (!formulario.value.id_tipo_elemento) {
-      mensaje.value = { texto: 'Debes seleccionar el Tipo de Elemento', tipo: 'error' }
-      guardando.value = false
-      return
-    }
-
-    if (!formulario.value.nombre) {
-      const tipo = listaTipos.value.find(t => t.id_tipo_elemento === formulario.value.id_tipo_elemento)
-      formulario.value.nombre = tipo?.nombre_tipo || ''
-    }
-
     const datos = {
       nombre: formulario.value.nombre.trim(),
       numero_serial: formulario.value.numero_serial.trim(),
@@ -298,53 +243,25 @@ const registrarElemento = async () => {
     if (formulario.value.ubicacion_actual?.trim()) datos.ubicacion_actual = formulario.value.ubicacion_actual.trim()
     if (formulario.value.fecha_registro) datos.fecha_registro = formulario.value.fecha_registro
 
-    // Si el serial ya existe, actualiza (PATCH); si no, crea (POST)
-    if (idInventarioSeleccionado.value) {
-      await $fetch(`${baseURL}/inventario/${idInventarioSeleccionado.value}`, {
-        method: 'PATCH',
-        body: datos,
-        credentials: 'include'
-      })
-    } else {
-      await $fetch(`${baseURL}/inventario`, {
-        method: 'POST',
-        body: datos,
-        credentials: 'include'
-      })
-    }
+    await $fetch(`${baseURL}/inventario/${route.params.id}`, {
+      method: 'PATCH',
+      body: datos,
+      credentials: 'include'
+    })
 
-    mensaje.value = { texto: '¡Elemento registrado exitosamente!', tipo: 'success' }
+    mensaje.value = { texto: '¡Elemento actualizado exitosamente!', tipo: 'success' }
 
     setTimeout(() => {
-      limpiarFormulario()
-      cargarDatos()
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-    }, 2000)
+      router.push('/inventario/consultar')
+    }, 1500)
 
   } catch (error) {
-    console.error('❌ Error al registrar:', error)
-    const errorMsg = error.data?.message || error.message || 'Error al registrar el elemento'
+    console.error('❌ Error al actualizar:', error)
+    const errorMsg = error.data?.message || error.message || 'Error al actualizar el elemento'
     mensaje.value = { texto: errorMsg, tipo: 'error' }
   } finally {
     guardando.value = false
   }
-}
-
-const limpiarFormulario = () => {
-  formulario.value = {
-    nombre: '',
-    descripcion: '',
-    numero_serial: '',
-    modelo: '',
-    marca: '',
-    ubicacion_actual: '',
-    fecha_registro: new Date().toISOString().split('T')[0],
-    id_tipo_elemento: '',
-    id_estado_elemento: '',
-    id_ambiente: ''
-  }
-  idInventarioSeleccionado.value = null
-  mensaje.value = { texto: '', tipo: '' }
 }
 
 onMounted(() => {
