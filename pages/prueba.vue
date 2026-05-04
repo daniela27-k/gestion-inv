@@ -156,7 +156,7 @@
 import { ref, computed, onMounted, watch } from "vue";
 import { Icon } from "@iconify/vue";
 import { getMenuItemsForRol, getRoleBadgeColor, getBotonesAmbiente, getEstadoAmbienteColor } from "~/utils/rolConfig";
-import { useAmbiente } from "~/composables/useAmbienteAntiguo";
+import { useAmbiente } from "~/composables/useAmbiente";
 
 const sidebarOpen = ref(false);
 const dropdownOpen = ref(false);
@@ -181,7 +181,7 @@ const {
 
 // Estado para el formulario de ambiente
 const showAmbienteForm = ref(false);
-//const editingAmbiente = ref<Ambiente | null>(null);
+const editingAmbiente = ref(null);
 const ambienteForm = ref({
   nombre_ambiente: '',
   capacidad: 0,
@@ -236,10 +236,8 @@ const closeAmbienteForm = () => {
 
 const saveAmbiente = async () => {
   if (editingAmbiente.value) {
-    // Editar
     await updateAmbiente(editingAmbiente.value.id_ambiente, ambienteForm.value);
   } else {
-    // Crear
     await createAmbiente(ambienteForm.value);
   }
   closeAmbienteForm();
@@ -252,8 +250,6 @@ const confirmDeleteAmbiente = async (ambiente) => {
     fetchAmbientes();
   }
 };
-
-// Usar la función del rolConfig
 
 // Renderizado dinámico de contenido
 const renderContent = computed(() => {
@@ -307,19 +303,13 @@ const renderContent = computed(() => {
                 Crear Ambiente
               </button>
             </div>
-
-            <!-- Loading -->
             <div v-if="loadingAmbientes" class="text-center py-8">
               <Icon icon="mdi:loading" class="w-8 h-8 animate-spin text-blue-600 mx-auto mb-2" />
               <p class="text-gray-600">Cargando ambientes...</p>
             </div>
-
-            <!-- Error -->
             <div v-else-if="errorAmbientes" class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
               <p class="text-red-800">{{ errorAmbientes }}</p>
             </div>
-
-            <!-- Lista de ambientes -->
             <div v-else class="overflow-x-auto">
               <table class="min-w-full table-auto">
                 <thead class="bg-gray-50">
@@ -337,28 +327,15 @@ const renderContent = computed(() => {
                     <td class="px-4 py-2 text-sm text-gray-900">{{ ambiente.capacidad }}</td>
                     <td class="px-4 py-2 text-sm text-gray-900">{{ ambiente.ubicacion }}</td>
                     <td class="px-4 py-2">
-                      <span
-                        class="inline-block px-2 py-1 text-xs font-semibold rounded-full"
-                        :class="getEstadoAmbienteColor(ambiente.estado)"
-                      >
+                      <span class="inline-block px-2 py-1 text-xs font-semibold rounded-full" :class="getEstadoAmbienteColor(ambiente.estado)">
                         {{ ambiente.estado.charAt(0).toUpperCase() + ambiente.estado.slice(1) }}
                       </span>
                     </td>
                     <td class="px-4 py-2 text-sm space-x-2">
-                      <button
-                        v-if="botonesAmbiente.some(b => b.id === 'editar')"
-                        @click="openAmbienteForm(ambiente)"
-                        class="text-yellow-600 hover:text-yellow-800"
-                        title="Editar"
-                      >
+                      <button v-if="botonesAmbiente.some(b => b.id === 'editar')" @click="openAmbienteForm(ambiente)" class="text-yellow-600 hover:text-yellow-800" title="Editar">
                         <Icon icon="mdi:pencil" class="w-4 h-4" />
                       </button>
-                      <button
-                        v-if="botonesAmbiente.some(b => b.id === 'eliminar')"
-                        @click="confirmDeleteAmbiente(ambiente)"
-                        class="text-red-600 hover:text-red-800"
-                        title="Eliminar"
-                      >
+                      <button v-if="botonesAmbiente.some(b => b.id === 'eliminar')" @click="confirmDeleteAmbiente(ambiente)" class="text-red-600 hover:text-red-800" title="Eliminar">
                         <Icon icon="mdi:delete" class="w-4 h-4" />
                       </button>
                     </td>
@@ -367,71 +344,6 @@ const renderContent = computed(() => {
               </table>
               <div v-if="ambientes.length === 0" class="text-center py-8 text-gray-500">
                 No hay ambientes registrados
-              </div>
-            </div>
-
-            <!-- Modal del formulario -->
-            <div v-if="showAmbienteForm" class="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
-              <div class="bg-white rounded-lg p-6 w-full max-w-md">
-                <h3 class="text-lg font-semibold mb-4">
-                  {{ editingAmbiente ? 'Editar Ambiente' : 'Crear Ambiente' }}
-                </h3>
-                <form @submit.prevent="saveAmbiente">
-                  <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Nombre del Ambiente</label>
-                    <input
-                      v-model="ambienteForm.nombre_ambiente"
-                      type="text"
-                      required
-                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                  <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Capacidad</label>
-                    <input
-                      v-model.number="ambienteForm.capacidad"
-                      type="number"
-                      min="1"
-                      required
-                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                  <div class="mb-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Ubicación</label>
-                    <input
-                      v-model="ambienteForm.ubicacion"
-                      type="text"
-                      required
-                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
-                  <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Estado</label>
-                    <select
-                      v-model="ambienteForm.estado"
-                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                      <option value="activo">Activo</option>
-                      <option value="inactivo">Inactivo</option>
-                      <option value="mantenimiento">Mantenimiento</option>
-                    </select>
-                  </div>
-                  <div class="flex justify-end space-x-3">
-                    <button
-                      type="button"
-                      @click="closeAmbienteForm"
-                      class="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
-                    >
-                      Cancelar
-                    </button>
-                    <button
-                      type="submit"
-                      class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                    >
-                      {{ editingAmbiente ? 'Actualizar' : 'Crear' }}
-                    </button>
-                  </div>
-                </form>
               </div>
             </div>
           </div>`,
