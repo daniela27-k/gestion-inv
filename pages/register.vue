@@ -70,11 +70,21 @@
                 </div>
                 <input
                   v-model="password"
-                  type="password"
+                  :type="showPassword ? 'text' : 'password'"
                   placeholder="••••••••"
-                  class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all"
+                  class="w-full pl-12 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:bg-white focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all"
                   required
                 />
+                <button
+                  type="button"
+                  @click="showPassword = !showPassword"
+                  class="absolute inset-y-0 right-0 pr-4 flex items-center"
+                >
+                  <Icon
+                    :name="showPassword ? 'mdi:eye-off-outline' : 'mdi:eye-outline'"
+                    class="w-5 h-5 text-gray-400 hover:text-gray-600 transition-colors"
+                  />
+                </button>
               </div>
             </div>
 
@@ -269,6 +279,7 @@ definePageMeta({ layout: 'public' });
 const nombre_completo = ref('');
 const email = ref('');
 const password = ref('');
+const showPassword = ref(false);
 const telefono = ref('');
 const rol_usuario = ref('');
 const estado_usuario = ref('');
