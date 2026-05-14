@@ -1,0 +1,10 @@
+{
+  "buildCommand": "pnpm run build",
+  "outputDirectory": ".output/public",
+  "framework": "nuxtjs",
+  "devCommand": "pnpm run dev",
+  "installCommand": "pnpm install",
+  "env": {
+    "NUXT_PUBLIC_API_BASE_URL": "@nuxt_public_api_base_url"
+  }
+}

@@ -281,7 +281,9 @@ export const menuItems: MenuItem[] = [
 
 // Función para filtrar menú según rol
 export function getMenuItemsForRol(rol: Rol): MenuItem[] {
-  const permisos = permisosPorRol[rol]
+  // ✅ Fallback seguro si el rol llega undefined mientras carga el perfil
+  const safeRol: Rol = (rol && permisosPorRol[rol]) ? rol : 'USUARIO'
+  const permisos = permisosPorRol[safeRol]
 
   return menuItems.filter(item => {
     // El item es visible si el usuario tiene AL MENOS uno de los permisos requeridos
@@ -367,7 +369,9 @@ export function getBotonesAmbiente(rol: Rol): BotonAccion[] {
 
 // Verificar si un usuario tiene un permiso específico
 export function tienePermiso(rol: Rol, permiso: keyof Permisos): boolean {
-  return permisosPorRol[rol][permiso]
+  // ✅ Fallback seguro si el rol llega undefined
+  const safeRol: Rol = (rol && permisosPorRol[rol]) ? rol : 'USUARIO'
+  return permisosPorRol[safeRol][permiso]
 }
 
 // Verificar si un usuario puede realizar una acción sobre un elemento

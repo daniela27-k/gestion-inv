@@ -234,15 +234,30 @@ const handleLogin = async () => {
       return
     }
 
-    await login({
+    const usuarioLogueado = await login({
       email: email.value,
       password: password.value
     })
 
-    await router.push('/perfil')
+    // ✅ Redirección basada en el rol real del usuario
+    const rol = usuarioLogueado?.rol_usuario
+    if (rol === 'ADMIN') {
+      await router.push('/usuarios')
+    } else if (rol === 'INSTRUCTOR') {
+      await router.push('/asignaciones')
+    } else {
+      await router.push('/perfil')
+    }
+
   } catch (err) {
     console.error('Error durante el login:', err)
-    error.value = err.message || 'Error durante el inicio de sesión. Verifica tus credenciales.'
+    // ✅ NestJS devuelve el mensaje real en err.data.message
+    const serverMsg = err?.data?.message
+    if (Array.isArray(serverMsg)) {
+      error.value = serverMsg.join(', ')
+    } else {
+      error.value = serverMsg || err?.message || 'Error durante el inicio de sesión. Verifica tus credenciales.'
+    }
   } finally {
     loading.value = false
   }

@@ -311,7 +311,13 @@ async function registro() {
     
   } catch (err) {
     console.error('Error durante el registro:', err);
-    error.value = err.message || 'Error durante el registro. Inténtalo de nuevo.';
+    // ✅ NestJS devuelve el mensaje real en err.data.message
+    const serverMsg = err?.data?.message;
+    if (Array.isArray(serverMsg)) {
+      error.value = serverMsg.join(', ');
+    } else {
+      error.value = serverMsg || err?.message || 'Error durante el registro. Inténtalo de nuevo.';
+    }
   } finally {
     loading.value = false;
   }
