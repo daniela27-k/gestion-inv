@@ -64,6 +64,8 @@ export const useAuth = () => {
             { method: 'POST', body: plainCredentials }
         );
         if (!response || !response.usuario) throw new Error('Error en el servidor');
+        user.value = null;
+        removeToken();
         setToken(response.access_token);
         user.value = response.usuario;
         return response.usuario;
@@ -76,6 +78,9 @@ export const useAuth = () => {
             { method: 'POST', body: plainCredentials }
         );
         if (!response || !response.usuario) throw new Error('Error en el servidor');
+        // Limpiar estado anterior antes de setear el nuevo usuario
+        user.value = null;
+        removeToken();
         setToken(response.access_token);
         user.value = response.usuario;
         return response.usuario;
