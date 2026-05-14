@@ -2,13 +2,14 @@ import { navigateTo } from "#app";
 import { useState, useRuntimeConfig } from "#imports";
 import { toRaw } from "vue";
 
+// ✅ CORREGIDO: campos con nombres exactos que espera el backend
 interface UserCredentials {
     nombre_completo?: string;
     email: string;
     password?: string;
     telefono?: string;
-    rol?: string;
-    estado?: string;
+    rol_usuario?: 'ADMIN' | 'INSTRUCTOR' | 'USUARIO';   // ✅ era "rol"
+    estado_usuario?: 'activo' | 'inactivo';              // ✅ era "estado"
 }
 
 interface AuthUser {
@@ -58,12 +59,25 @@ export const useAuth = () => {
     };
 
     const register = async (credentials: UserCredentials): Promise<AuthUser> => {
-        const plainCredentials = toRaw(credentials);
+        const raw = toRaw(credentials);
+
+        // ✅ Mapeo explícito — garantiza que los nombres lleguen correctos al backend
+        const body = {
+            nombre_completo: raw.nombre_completo,
+            email: raw.email,
+            password: raw.password,
+            telefono: raw.telefono,
+            rol_usuario: raw.rol_usuario,    // ✅ backend espera "rol_usuario"
+            estado_usuario: raw.estado_usuario, // ✅ backend espera "estado_usuario"
+        };
+
         const response = await $fetch<{ usuario: AuthUser; access_token: string }>(
             `${runtimeConfig.public.apiBaseUrl}/auth/register`,
-            { method: 'POST', body: plainCredentials }
+            { method: 'POST', body }
         );
+
         if (!response || !response.usuario) throw new Error('Error en el servidor');
+
         user.value = null;
         removeToken();
         setToken(response.access_token);
@@ -72,13 +86,20 @@ export const useAuth = () => {
     };
 
     const login = async (credentials: UserCredentials): Promise<AuthUser> => {
-        const plainCredentials = toRaw(credentials);
+        const raw = toRaw(credentials);
+
+        const body = {
+            email: raw.email,
+            password: raw.password,
+        };
+
         const response = await $fetch<{ usuario: AuthUser; access_token: string }>(
             `${runtimeConfig.public.apiBaseUrl}/auth/login`,
-            { method: 'POST', body: plainCredentials }
+            { method: 'POST', body }
         );
+
         if (!response || !response.usuario) throw new Error('Error en el servidor');
-        // Limpiar estado anterior antes de setear el nuevo usuario
+
         user.value = null;
         removeToken();
         setToken(response.access_token);
