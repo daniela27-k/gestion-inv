@@ -237,13 +237,15 @@ import { ref, reactive, computed, onMounted, watch } from 'vue';
 
 definePageMeta({ layout: 'perfil-layout' });
 
-const { logout, user, getProfile } = useAuth();
+const { logout, user, getProfile, fetchWithAuth } = useAuth();
 const router = useRouter();
 const config = useRuntimeConfig();
 const API = config.public.apiBaseUrl;
 
 // ── Profile data ──────────────────────────────────────────────────────────────
-const { data: apiData, pending, error } = useApi('/auth/profile', { credentials: 'include' });
+const apiData = ref(null);
+const pending = ref(true);
+const error = ref(null);
 const profileData = computed(() => apiData.value || user.value);
 
 // ── Avatar Logic ─────────────────────────────────────────────────────────────
@@ -330,12 +332,11 @@ const saveProfile = async () => {
   saving.value = true;
   saveError.value = '';
   try {
-    await $fetch(`${API}/auth/profile`, {
+    await fetchWithAuth(`${API}/auth/profile`, {
       method: 'PATCH',
-      credentials: 'include',
       body: { ...form }
     });
-    await getProfile();
+    apiData.value = await getProfile();
     isEditing.value = false;
     saveSuccess.value = true;
     setTimeout(() => { saveSuccess.value = false; }, 4000);
@@ -362,9 +363,8 @@ const changePassword = async () => {
   }
   changingPassword.value = true;
   try {
-    await $fetch(`${API}/auth/profile`, {
+    await fetchWithAuth(`${API}/auth/profile`, {
       method: 'PATCH',
-      credentials: 'include',
       body: { password: passwordForm.new }
     });
     passwordSuccess.value = true;
@@ -380,7 +380,13 @@ const changePassword = async () => {
 const stats = ref({ elementosAsignados: 45, novedadesRegistradas: 8, ambientesGestionados: 3 });
 
 onMounted(async () => {
-  if (!user.value) await getProfile();
+  try {
+    apiData.value = await getProfile();
+  } catch (e) {
+    error.value = e?.message || 'Error al cargar perfil';
+  } finally {
+    pending.value = false;
+  }
   loadSavedPhoto();
 });
 
@@ -478,4 +484,5 @@ const formatDate = (date) => {
 .logout-full:hover { background: #fecaca; }
 
 .alert-success { background: #ecfdf5; color: #065f46; border: 1px solid #10b981; padding: 10px; border-radius: 10px; font-size: 13px; margin: 10px 0; }
+.alert-error { background: #fef2f2; color: #dc2626; border: 1px solid #fca5a5; padding: 10px; border-radius: 10px; font-size: 13px; margin: 10px 0; }
 </style>
